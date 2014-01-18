@@ -31,6 +31,7 @@ help:
 
 clean:
 	-rm -rf $(BUILD)/*
+	-rmdir $(BUILD)
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILD)/html
