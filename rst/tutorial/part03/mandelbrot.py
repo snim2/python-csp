@@ -159,4 +159,4 @@ def main(size, filename):
 
 if __name__ == '__main__':
     size = (320, 240)
-    main(size, 'manelbrot.png').start()
+    main(size, 'mandelbrot.png').start()
