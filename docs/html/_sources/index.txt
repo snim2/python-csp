@@ -15,7 +15,6 @@ Contents:
    builtins.rst
    guards.rst
    patterns.rst
-   tracer.rst
    mandelbrot.rst
 
 
