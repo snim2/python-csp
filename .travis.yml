@@ -1,0 +1,20 @@
+language: python
+
+python:
+  - "2.7"
+  - "3.3"
+  # does not have headers provided, please ask https://launchpad.net/~pypy/+archive/ppa
+  # maintainers to fix their pypy-dev package.
+  - "pypy"
+
+install:
+  - pip install .
+  - pip install -r requirements.txt --use-mirrors
+
+#
+# Run all tests.
+# FIXME: Convert hand-rolled tests to py.test framework.
+#
+
+# script: 
+#  - py.test
