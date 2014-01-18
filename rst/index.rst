@@ -112,8 +112,10 @@ Intermediate
 ------------
 
 - Part 6 - Using different channel types
+
 .. toctree::
    :maxdepth: 1
+
    tutorial/part07/tutorial7
    tutorial/part08/tutorial8
 
