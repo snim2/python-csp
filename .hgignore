@@ -1,7 +1,0 @@
-TAGS
-python_csp.egg-info
-build
-dist
-syntax: glob
-*.pyc
-examples/mandelbrot/mandelbrot.png
