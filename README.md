@@ -13,12 +13,15 @@ Installation
 
 python-csp can be installed using PIP (PIP Installs Python):
 
+```bash
     $ sudo pip install python-csp
+```
 
 or from a source distribution using setup.py:
 
-    $ sudo python setup.py install
-
+```bash
+    $ python setup.py install
+```
 
 Introduction
 ------------
@@ -54,12 +57,19 @@ Documentation.
 
 There are several sources of documentation for python-csp:
 
+ * Online documentation, including a tutorial, is hosted on [Read the Docs](http://python-csp.readthedocs.org/en/latest/)
+
  * If you are running the python-csp shell, type "info csp" to list available in-shell help.
 
- * A user guide exists in the `tutorial/` directory of the source.
+ * Some community documentation, such as sprint reports and PDFs of peer-reviewed publications can be found at [extradocs](http://github.com/python-concurrency/extradocs)
 
- * `examples/` contains some larger example programs.
 
+Support and contributing.
+------------------------
+
+We have a [mailing list](https://groups.google.com/forum/#!forum/python-csp) where you can ask questions. 
+
+If you wish to contribute to this project, please fork the repo on GitHub and issue a pull request.
 
 Publications.
 ------------
@@ -67,4 +77,4 @@ Publications.
 S. Mount, M. Hammoudeh, S. Wilson, R. Newman (2009) CSP as a Domain-Specific 
 Language Embedded in Python and Jython. In Proceedings of Communicating Process
 Architectures 2009. Eindoven, Netherlands. 1st -- 4th November 2009. Published 
-IOS Press.
+IOS Press. [[PDF] (http://github.com/python-concurrency/extradocs)]
