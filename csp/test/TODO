@@ -1,0 +1,14 @@
+test_chan - DONE
+
+test_seq - check order of process completion
+test_par - check order of process completion
+
+test_alt - runs to completion
+test_builtins - moved to deprecated. Needs re-writing.
+test_choice - runs to completion
+test_contexts - runs to completion
+test_forever - moved to deprecated. Needs re-writing.
+test_oop - DONE
+test_poison - runs to completion
+test_rep - runs to completion
+
