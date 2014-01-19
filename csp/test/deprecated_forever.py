@@ -21,19 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import operator
 import os
-import sys
 
 from functools import reduce
 
-sys.path.insert(0, "..")
-
-from csp.csp import *
-from csp.builtins import Generate, Printer
+from ..csp import *
+from ..builtins import Generate, Printer
 
 
-def test_builtins():
-    channel, skip = Channel(), Skip()
-    skip //= Generate(channel), Printer(channel)
+# def test_builtins():
+#    channel, skip = Channel(), Skip()
+#    skip //= Generate(channel), Printer(channel)
 
 
 @forever
@@ -53,10 +50,6 @@ def fact(outchan):
         n += 1
         yield
 
-def test_fact():
+def fact():
     channel, skip = Channel(), Skip()
     skip //= fact(channel), Printer(channel)
-
-if __name__ == '__main__':
-#    test_builtins()
-    test_fact()
