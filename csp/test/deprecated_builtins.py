@@ -10,12 +10,10 @@ to run.
 import sys
 import unittest
 
-sys.path.insert(0, "..")
-
-import csp.os_process
-import csp.os_thread
-csp.os_thread.set_debug(True)
-import csp.builtins as builtins
+import ..os_process
+import ..os_thread
+..os_thread.set_debug(True)
+import ..builtins as builtins
 
 
 class TestBuiltinsWithProcesses(unittest.TestCase):
@@ -178,10 +176,4 @@ class TestBuiltinsWithProcesses(unittest.TestCase):
 #
 class TestBuiltinsWithThreads(TestBuiltinsWithProcesses):
      csp_process = csp.os_thread
-
-
-if __name__ == '__main__':
-    unittest.main()
-#    unittest.main(TestBuiltinsWithThreads, 'testId')
-#    unittest.main(TestBuiltinsWithThreads, 'testSin')
 

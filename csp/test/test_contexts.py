@@ -3,7 +3,7 @@
 """
 Test the CSP class, found in csp.csp and its context managers.
 
-TODO: Replace this with proper unit testing.
+TODO: Replace this with something that uses py.test.
 
 Copyright (C) Sarah Mount, 2010.
 
@@ -21,11 +21,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys
-
-sys.path.insert(0, "..")
-
-from csp.csp import CSP
+from ..csp import CSP
 
 
 def printme(*args):
