@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 
-from setuptools import setup, find_packages
+from distutils.core import setup
+import sys
 
 version = '0.1'
+
+if sys.version < '3':
+    package_dir = {'': 'csp'}
+else:
+    package_dir = {'': 'csp3'}
+
 
 setup(name='python-csp',
       version=version,
@@ -10,21 +17,20 @@ setup(name='python-csp',
       long_description="""\
 python-csp adds communicating sequential processes to Python""",
       classifiers=["Intended Audience :: Developers",
-                   "License :: OSI Approved :: GNU General Public License (GPL)",
+                   ("License :: OSI Approved :: " +
+                    "GNU General Public License (GPL)"),
                    "Programming Language :: Python",
                    "Topic :: Software Development :: Libraries",
-                   "Topic :: System :: Distributed Computing"], 
+                   "Topic :: System :: Distributed Computing"],
       keywords='concurrency multicore parallel',
       author='Sarah Mount',
       author_email='s.mount@wlv.ac.uk',
       url='http://github.com/snim2/python-csp/',
       license='GPL',
-      packages=find_packages(exclude=['ez_setup', 'examples', 'test',
-                                      'benchmark', 'rst', 'scripts',
-                                  ]),
+      package_dir=package_dir,
       include_package_data=True,
       zip_safe=True,
-	  scripts=['scripts/python-csp', ],
+      scripts=['scripts/python-csp', ],
       install_requires=[
           # -*- Extra requirements: -*-
       ],
