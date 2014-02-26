@@ -3,6 +3,4 @@ check-manifest==0.19
 decorator==3.4.0
 py==1.4.19
 pytest==2.5.1
-python-csp==0.1dev
-test-pkg==0.0
-wsgiref==0.1.2
+# wsgiref==0.1.2
