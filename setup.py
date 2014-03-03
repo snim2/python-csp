@@ -28,13 +28,5 @@ python-csp adds communicating sequential processes to Python""",
       url='http://github.com/snim2/python-csp/',
       license='GPL',
       package_dir=package_dir,
-      include_package_data=True,
-      zip_safe=True,
       scripts=['scripts/python-csp', ],
-      install_requires=[
-          # -*- Extra requirements: -*-
-      ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
       )
