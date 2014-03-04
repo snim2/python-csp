@@ -5,6 +5,7 @@ Copyright (C) Sarah Mount, 2009 under the GNU GPL v2. See the file LICENSE for
 more details.
 
 [![Build Status](https://travis-ci.org/snim2/python-csp.png?branch=master)](https://travis-ci.org/snim2/python-csp)
+[![Requirements Status](https://requires.io/github/snim2/python-csp/requirements.png?branch=master)](https://requires.io/github/snim2/python-csp/requirements/?branch=master)
 [![PyPi version](https://pypip.in/v/python-csp/badge.png)](https://crate.io/packages/python-csp/)
 [![PyPi downloads](https://pypip.in/d/python-csp/badge.png)](https://crate.io/packages/python-csp/)
 
