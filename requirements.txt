@@ -1,4 +1,4 @@
-argparse==1.2.1
+argparse>=1.2.0
 check-manifest==0.19
 decorator==3.4.0
 py==1.4.19
