@@ -3,4 +3,3 @@ check-manifest==0.19
 decorator==3.4.0
 py==1.4.19
 pytest==2.5.1
-test-pkg==0.0
