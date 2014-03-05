@@ -7,8 +7,14 @@ python:
   - "pypy"
 
 install:
-  - pip install .
+  - pip install -e . --use-mirrors
+
+before-script:
   - pip install -r requirements.txt --use-mirrors
 
 script: 
-  - py.test csp/test
+  - py.test --cov-report term-missing --cov csp csp
+
+after-success:
+  - coveralls
+
