@@ -79,3 +79,7 @@ S. Mount, M. Hammoudeh, S. Wilson, R. Newman (2009) CSP as a Domain-Specific
 Language Embedded in Python and Jython. In Proceedings of Communicating Process
 Architectures 2009. Eindoven, Netherlands. 1st -- 4th November 2009. Published 
 IOS Press. [[PDF] (http://github.com/python-concurrency/extradocs)]
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/snim2/python-csp/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
