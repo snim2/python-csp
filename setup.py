@@ -1,15 +1,8 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
-import sys
+from setuptools import setup, find_packages
 
 version = '0.1'
-
-if sys.version < '3':
-    package_dir = {'': 'csp'}
-else:
-    package_dir = {'': 'csp3'}
-
 
 setup(name='python-csp',
       version=version,
@@ -27,7 +20,8 @@ python-csp adds communicating sequential processes to Python""",
       author_email='s.mount@wlv.ac.uk',
       url='http://github.com/snim2/python-csp/',
       license='GPL',
-      package_dir=package_dir,
+      packages=find_packages(exclude=['ez_setup', 'examples', 'test',
+                                      'benchmark', 'rst', 'scripts', ]),
       include_package_data=True,
       zip_safe=True,
       scripts=['scripts/python-csp', ],
