@@ -191,6 +191,6 @@ class HIDSensorCollection:
     def _debug(self):
         print(len(self._interfaces), 'HID sensors attached')
         for hidif in self._interfaces:
-            print('Interface: {0},'.format(str(hidif)), end=' ')
+            print('Interface: {0},'.format(str(hidif)))
             print(self._interfaces[hidif]._debug_str().format(
                 self._interfaces[hidif].get_data()))
