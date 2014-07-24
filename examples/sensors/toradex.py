@@ -44,6 +44,7 @@ def _debug(*args):
 
 
 class ToradexSensor(HIDSensor):
+
     """Generic interface to a single Toradex sensor."""
     VID = 0x1b67         # Vendor ID. PID *MUST* be set in subclasses.
     EP = 0x82            # Endpoint address for interrupt reads.
@@ -54,7 +55,7 @@ class ToradexSensor(HIDSensor):
     RAM = 0x0
     FLASH = 0x01
     # Sampling rates.
-    AFTER_SAMPLING = 0x0 # Factory default.
+    AFTER_SAMPLING = 0x0  # Factory default.
     AFTER_CHANGE = 0x1
     FIXED_RATE = 0x2
     # LED modes.
@@ -68,7 +69,7 @@ class ToradexSensor(HIDSensor):
         HIDSensor.__init__(self)
 
     def feature_report(self, path, buff):
-        size = 32 # For all Toradex sensors
+        size = 32  # For all Toradex sensors
         while True:
             reply = self.get_feature_report(path, size)
             if reply[0] == hid.HID_RET_FAIL_GET_REPORT:
@@ -97,11 +98,14 @@ class ToradexSensor(HIDSensor):
                 _debug(report)
                 if report[0] == 0xff:
                     break
- 
+
     def blink_led(self, rate='slow'):
-        if rate == 'fast': self.blink_led_fast()
-        elif rate == 'pulse': self.blink_led_pulse()
-        else: self.blink_led_slow()
+        if rate == 'fast':
+            self.blink_led_fast()
+        elif rate == 'pulse':
+            self.blink_led_pulse()
+        else:
+            self.blink_led_slow()
         return
 
     def blink_led_slow(self):
@@ -111,7 +115,7 @@ class ToradexSensor(HIDSensor):
                            ToradexSensor.BLINK_SLOW)
         self.feature_report((), buff)
         return
-        
+
     def blink_led_fast(self):
         buff = struct.pack('6b27x',
                            ToradexSensor.SET, ToradexSensor.FLASH,
@@ -165,7 +169,8 @@ class ToradexSensor(HIDSensor):
         __parse(_unpack(_read_data()))
         """
         try:
-            data = struct.unpack('<%gH' % size, bytes) # FIXME: OK for Python3? 
+            # FIXME: OK for Python3?
+            data = struct.unpack('<%gH' % size, bytes)
         except struct.error:
             return None
         return data
@@ -183,24 +188,29 @@ class ToradexSensor(HIDSensor):
         _parse(_unpack(_read_data()))
         """
         bytes = self.interrupt_read(ToradexSensor.EP, size, 1000)
-        if bytes: return bytes
-        else: return None
+        if bytes:
+            return bytes
+        else:
+            return None
 
     def __str__(self):
         return 'Generic Python interface to Toradex OAK sensors'
 
 
 class ToradexCurrent(ToradexSensor):
+
     """Interface to a single Toradex current sensor."""
     PID = 0x0009
 
     def _parse(self, bytes):
-        return bytes[0]/100.0, bytes[1]/100000.0
+        return bytes[0] / 100.0, bytes[1] / 100000.0
 
     def get_current(self):
         data = self._parse(self._unpack(self._read_data()))
-        if data: return data[1]
-        else: return None
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_data(self):
         return self._parse(self._unpack(self._read_data()))
@@ -213,31 +223,40 @@ class ToradexCurrent(ToradexSensor):
 
 
 class ToradexMagR(ToradexSensor):
+
     """Interface to a single Toradex magnetic rotation sensor."""
     PID = 0x000b
 
     def _parse(self, data):
-        return data[0]/1000.0, data[1]/1000.0, data[2], data[3]
+        return data[0] / 1000.0, data[1] / 1000.0, data[2], data[3]
 
     def get_angle(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_magnitute(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[2]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[2]
+        else:
+            return None
 
-    def get_status(self): # blah.
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[3]
-        else: return None
+    def get_status(self):  # blah.
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[3]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[:-1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[:-1]
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the Toradex magnetic rotation sensor'
@@ -247,21 +266,26 @@ class ToradexMagR(ToradexSensor):
 
 
 class ToradexMotion(ToradexSensor):
+
     """Interface to a single Toradex IR motion sensor."""
     PID = 0x0006
 
     def _parse(self, data):
-        return data[0]/1000.0, data[1]
+        return data[0] / 1000.0, data[1]
 
     def get_motion(self):
-      	data = self._parse(self._unpack(self._read_data()))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data()))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data()))
-        if data: return data
-        else: return None
+        data = self._parse(self._unpack(self._read_data()))
+        if data:
+            return data
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the Toradex IR motion sensor'
@@ -271,21 +295,26 @@ class ToradexMotion(ToradexSensor):
 
 
 class ToradexDist(ToradexSensor):
+
     """Interface to a single Toradex distance sensor."""
     PID = 0x0005
 
     def _parse(self, data):
-        return data[0]/1000.0, data[1]/1000.0
+        return data[0] / 1000.0, data[1] / 1000.0
 
     def get_dist(self):
-      	data = self._parse(self._unpack(self._read_data()))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data()))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data()))
-        if data: return data
-        else: return None
+        data = self._parse(self._unpack(self._read_data()))
+        if data:
+            return data
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the Toradex distance sensor'
@@ -295,31 +324,40 @@ class ToradexDist(ToradexSensor):
 
 
 class ToradexTilt(ToradexSensor):
+
     """Interface to a single Toradex tilt sensor."""
     PID = 0x0004
 
     def _parse(self, data):
-        return data[0]/1000.0, data[1]/100.0, data[2]/1000.0, data[3]/1000.0
+        return data[0] / 1000.0, data[1] / 100.0, data[2] / 1000.0, data[3] / 1000.0
 
     def get_accel(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_zenith(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[2]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[2]
+        else:
+            return None
 
     def get_azimuth(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[3]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[3]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the Toradex tilt sensor'
@@ -329,21 +367,26 @@ class ToradexTilt(ToradexSensor):
 
 
 class ToradexLux(ToradexSensor):
+
     """Interface to a single Toradex lux sensor."""
     PID = 0x0003
 
     def _parse(self, data):
-        return data[0]/1000.0, data[1]
+        return data[0] / 1000.0, data[1]
 
     def get_lux(self):
-       	data = self._parse(self._unpack(self._read_data(size=4)))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=4)))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data(size=4)))
-        if data: return data
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=4)))
+        if data:
+            return data
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the Toradex lux sensor'
@@ -351,33 +394,42 @@ class ToradexLux(ToradexSensor):
     def _debug_str(self):
         return 'Frame: {0}s lux: {1}Lux'
 
-    
+
 class ToradexG(ToradexSensor):
+
     """Interface to a single ToradexG sensor."""
     PID = 0x000a
 
     def _parse(self, data):
-        return data[0]/1000.0, data[1]/1000.0, data[2]/1000.0, data[3]/1000.0
+        return data[0] / 1000.0, data[1] / 1000.0, data[2] / 1000.0, data[3] / 1000.0
 
     def get_x(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_y(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[2]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[2]
+        else:
+            return None
 
     def get_z(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data[3]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data[3]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data(size=8), size=4))
-        if data: return data
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=8), size=4))
+        if data:
+            return data
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the Toradex G (3-axis accel)  sensor'
@@ -387,26 +439,33 @@ class ToradexG(ToradexSensor):
 
 
 class ToradexRH(ToradexSensor):
+
     """Interface to a single ToradexRH sensor."""
     PID = 0x0001
 
     def _parse(self, data):
-        return data[0]/1000.0, data[1]/100.0, data[2]/100.0-273.0
+        return data[0] / 1000.0, data[1] / 100.0, data[2] / 100.0 - 273.0
 
     def get_temp(self):
-      	data = self._parse(self._unpack(self._read_data(size=6), size=3))
-        if data: return data[2]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=6), size=3))
+        if data:
+            return data[2]
+        else:
+            return None
 
     def get_humidity(self):
-      	data = self._parse(self._unpack(self._read_data(size=6), size=3))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=6), size=3))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data(size=6), size=3))
-        if data: return data
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=6), size=3))
+        if data:
+            return data
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the Toradex RH sensor'
@@ -416,27 +475,34 @@ class ToradexRH(ToradexSensor):
 
 
 class ToradexP(ToradexSensor):
+
     """Interface to a single ToradexP sensor."""
     PID = 0x0002
 
     def _parse(self, data):
         # Note that the Toradex / Oak data sheet is incorrect here
-        return data[0]/1000.0, data[1]*10.0, data[2]/10.0-273.0
+        return data[0] / 1000.0, data[1] * 10.0, data[2] / 10.0 - 273.0
 
     def get_temp(self):
-      	data = self._parse(self._unpack(self._read_data(size=6), size=3))
-        if data: return data[2]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=6), size=3))
+        if data:
+            return data[2]
+        else:
+            return None
 
     def get_pressure(self):
-      	data = self._parse(self._unpack(self._read_data(size=6), size=3))
-        if data: return data[1]
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=6), size=3))
+        if data:
+            return data[1]
+        else:
+            return None
 
     def get_data(self):
-      	data = self._parse(self._unpack(self._read_data(size=6), size=3))
-        if data: return data
-        else: return None
+        data = self._parse(self._unpack(self._read_data(size=6), size=3))
+        if data:
+            return data
+        else:
+            return None
 
     def __str__(self):
         return 'Python interface to the ToradexP sensor'
@@ -446,9 +512,10 @@ class ToradexP(ToradexSensor):
 
 
 class Toradex8ChannelA2D(ToradexSensor):
+
     """Interface to a single Toradex +/-10V 8 Channel ADC"""
     PID = 0x000e
-    MODE_SINGLE_ENDED = 0x0 # Factory default.
+    MODE_SINGLE_ENDED = 0x0  # Factory default.
     MODE_PSEUDO_DIFFERENTIAL = 0x01
 
     def __init__(self):
@@ -462,7 +529,7 @@ class Toradex8ChannelA2D(ToradexSensor):
         raise NotImplementedError('Need report paths!')
 
     def get_channel_name(self, channel):
-        """Get user channel name."""        
+        """Get user channel name."""
         raise NotImplementedError('Need report paths!')
 
     def set_offset_channel(self, channel, offset):
@@ -493,25 +560,29 @@ class Toradex8ChannelA2D(ToradexSensor):
         raise NotImplementedError('Need report paths!')
 
     def _parse(self, data):
-        return (data[0]/1000.0, data[1]/1000.0, data[2]/1000.0,
-                data[3]/1000.0, data[4]/1000.0, data[5]/1000.0,
-                data[6]/1000.0, data[7]/1000.0, data[8]/1000.0)
+        return (data[0] / 1000.0, data[1] / 1000.0, data[2] / 1000.0,
+                data[3] / 1000.0, data[4] / 1000.0, data[5] / 1000.0,
+                data[6] / 1000.0, data[7] / 1000.0, data[8] / 1000.0)
 
     def get_data(self):
         data = self._parse(self._unpack(self._read_data(size=18), size=9))
-        if data: return data
-        else: return None
+        if data:
+            return data
+        else:
+            return None
 
     def get_channel(self, channel):
         data = self.get_data()
-        if not data: return None
-        else: return data[channel+1]
+        if not data:
+            return None
+        else:
+            return data[channel + 1]
 
     def __str__(self):
         return 'Python interface to the Toradex +/-10V 8 Channel ADC'
 
     def _debug_str(self):
-        if self.mode == Toradex8ChannelA2D.MODE_SINGLE_ENDED:        
+        if self.mode == Toradex8ChannelA2D.MODE_SINGLE_ENDED:
             return ('Frame no: {0}s, CH0-GNDi: {1}V, CH1-GNDi: {2}V, ' +
                     'CH2-GNDi: {3}V, CH3-GNDi: {4}V, CH4-GNDi: {5}V, ' +
                     'CH5-GNDi: {6}V, CH6-GNDi: {7}V, CH7-GNDi: {8}V')
@@ -519,7 +590,8 @@ class Toradex8ChannelA2D(ToradexSensor):
             return ('Frame no: {0}s, CH0-1: {1}V, CH1-0: {2}V, CH2-3: {3}V, ' +
                     'CH3-2: {4}V, CH4-5: {5}V, CH5-4: {6}V, CH6-7: {7}V, ' +
                     'CH7-6: {8}V,')
-        else: raise HIDError('Toradex8ChannelA2D in undefined input mode!')
+        else:
+            raise HIDError('Toradex8ChannelA2D in undefined input mode!')
 
 
 # Define a collection of Toradex sensors. Use this when you
@@ -535,30 +607,62 @@ ToradexSensorCollection = HIDSensorCollection([Toradex8ChannelA2D,
                                                ToradexRH,
                                                ToradexP])
 
-### Test interfaces
+# Test interfaces
+
+
 def __test(sensorclass):
     sensor = sensorclass()
     print(sensor.open())
     while True:
         sensor.blink_led()
-        print(sensor._debug_str().format(&sensor.get_data()))
+        print(sensor._debug_str().format( & sensor.get_data()))
 
-def __test_rh(): __test(ToradexRH)
-def __test_g(): __test(ToradexG)
-def __test_tilt(): __test(ToradexTilt)
-def __test_lux(): __test(ToradexLux)
-def __test_dist(): __test(ToradexDist)
-def __test_motion(): __test(ToradexMotion)
-def __test_magr(): __test(ToradexMagR)
-def __test_current(): __test(ToradexCurrent)     
-def __test_pressure(): __test(ToradexP)
-def __test_A2D(): __test(Toradex8ChannelA2D)
+
+def __test_rh():
+    __test(ToradexRH)
+
+
+def __test_g():
+    __test(ToradexG)
+
+
+def __test_tilt():
+    __test(ToradexTilt)
+
+
+def __test_lux():
+    __test(ToradexLux)
+
+
+def __test_dist():
+    __test(ToradexDist)
+
+
+def __test_motion():
+    __test(ToradexMotion)
+
+
+def __test_magr():
+    __test(ToradexMagR)
+
+
+def __test_current():
+    __test(ToradexCurrent)
+
+
+def __test_pressure():
+    __test(ToradexP)
+
+
+def __test_A2D():
+    __test(Toradex8ChannelA2D)
+
 
 def __test_collection(n=10):
     import time
     collection = ToradexSensorCollection
     print(collection.open())
-    while n>0:
+    while n > 0:
         time.sleep(0.1)
         collection._debug()
         n -= 1
@@ -566,15 +670,15 @@ def __test_collection(n=10):
 
 if __name__ == '__main__':
     # Test sensor collection
-#    __test_collection()
+    #    __test_collection()
 
-# Test individual sensors
-#    __test_rh()
-#    __test_g()
-#    __test_tilt()
-#    __test_lux()
-#    __test_dist()
-#    __test_motion()
+    # Test individual sensors
+    #    __test_rh()
+    #    __test_g()
+    #    __test_tilt()
+    #    __test_lux()
+    #    __test_dist()
+    #    __test_motion()
     __test_magr()
 #    __test_current()
 #    __test_pressure()
@@ -588,4 +692,3 @@ if __name__ == '__main__':
     #         print sensor1._debug_str().format(*sensor1.get_data())
     #         print sensor2._debug_str().format(*sensor2.get_data())
     # __test2()
-    

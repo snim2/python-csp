@@ -17,7 +17,8 @@
 
 # You should have rceeived a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA
 
 
 from csp.csp import *
@@ -49,11 +50,11 @@ def get_colour(mag, cmin=0, cmax=100):
     @return: An integer tuple representing an RGB value.
     """
     assert cmin != cmax
-    a = float(mag-cmin)/(cmax-cmin)
-    blue = min((max((4*(0.75-a), 0.)), 1.))
-    red = min((max((4*(a-0.25), 0.)), 1.))
-    green = min((max((4*math.fabs(a-0.5)-1., 0)), 1.))
-    return int(255*red), int(255*green), int(255*blue)
+    a = float(mag - cmin) / (cmax - cmin)
+    blue = min((max((4 * (0.75 - a), 0.)), 1.))
+    red = min((max((4 * (a - 0.25), 0.)), 1.))
+    green = min((max((4 * math.fabs(a - 0.5) - 1., 0)), 1.))
+    return int(255 * red), int(255 * green), int(255 * blue)
 
 
 @process
@@ -67,7 +68,7 @@ def mandelbrot(xcoord, dimension, cout, acorn=-2.0, bcorn=-1.250):
 
     readset =
     writeset = cout
-    
+
     @type xcoord: C{int}
     @param xcoord: x-coordinate of this image column.
     @type width: C{int}
@@ -83,20 +84,20 @@ def mandelbrot(xcoord, dimension, cout, acorn=-2.0, bcorn=-1.250):
     """
     (width, height) = dimension
     # nu implements the normalized iteration count algorithm
-    nu = lambda zz, n: n + 1 - math.log(math.log(abs(zz)))/math.log(2)
+    nu = lambda zz, n: n + 1 - math.log(math.log(abs(zz))) / math.log(2)
     imgcolumn = [0. for i in range(height)]
     for ycoord in range(height):
         z = complex(0., 0.)
-        c = complex(acorn + xcoord*2.5/float(width),
-                    bcorn + ycoord*2.5/float(height))
+        c = complex(acorn + xcoord * 2.5 / float(width),
+                    bcorn + ycoord * 2.5 / float(height))
         for i in range(MAXITER):
-            z = complex(z.real**2 - z.imag**2 + c.real,
-                        2*z.real*z.imag + c.imag)
-            if abs(z)**2 > 4:
+            z = complex(z.real ** 2 - z.imag ** 2 + c.real,
+                        2 * z.real * z.imag + c.imag)
+            if abs(z) ** 2 > 4:
                 break
-        if i == MAXITER - 1: # Point lies inside the Mandelbrot set.
+        if i == MAXITER - 1:  # Point lies inside the Mandelbrot set.
             colour = (0, 0, 0)
-        else: # Point lies outside the Mandelbrot set.
+        else:  # Point lies outside the Mandelbrot set.
             colour = get_colour(nu(z, i), cmax=MAXITER)
         imgcolumn[ycoord] = colour
     cout.write((xcoord, imgcolumn))
@@ -109,7 +110,7 @@ def consume(size, filename, cins):
 
     readset = cins
     writeset =
-    
+
     @type size: C{tuple}
     @param size: Width and height of generated fractal image.
     @type filename: C{str}
@@ -139,6 +140,7 @@ def consume(size, filename, cins):
                 for channel in cins:
                     channel.poison()
                 pygame.quit()
+
 
 @process
 def main(size, filename):

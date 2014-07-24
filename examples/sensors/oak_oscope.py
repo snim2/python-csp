@@ -25,6 +25,7 @@ __version__ = '0.2'
 
 from oscilloscope import Oscilloscope
 
+
 def chart_accel():
     """Requires a Toradex Oak G to be attached to a USB port."""
     import dsp

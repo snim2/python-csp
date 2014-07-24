@@ -40,7 +40,7 @@ def trace_sin():
               Sin(channels[0], channels[1]),
               Oscilloscope(channels[1]))
     par.start()
-    return    
+    return
 
 
 def trace_cos():
@@ -51,7 +51,7 @@ def trace_cos():
               Cos(channels[0], channels[1]),
               Oscilloscope(channels[1]))
     par.start()
-    return    
+    return
 
 
 def trace_mux():
@@ -65,7 +65,7 @@ def trace_mux():
               Mux2(channels[3], channels[4], channels[5]),
               Oscilloscope(channels[5]))
     par.start()
-    return    
+    return
 
 EXAMPLES = {}
 for name, func in globals().items():
@@ -83,4 +83,3 @@ if __name__ == '__main__':
     else:
         print('Use cursor up/down for scaling, s for save and q for quit')
         EXAMPLES[sys.argv[1]]()
-

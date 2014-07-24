@@ -30,14 +30,15 @@ from CChannel import CChannel as Channel
 
 __all__ = ['TokenRing']
 
+
 class TokenRing(Par):
+
     def __init__(self, func, size, numtoks=1):
         self.chans = [Channel() for channel in xrange(size)]
         self.procs = [func(index=i,
                            tokens=numtoks,
                            numnodes=size,
-                           inchan=self.chans[i-1],
+                           inchan=self.chans[i - 1],
                            outchan=self.chans[i]) for i in xrange(size)]
-        super(TokenRing, self).__init__(*self.procs) 
+        super(TokenRing, self).__init__(*self.procs)
         return
-

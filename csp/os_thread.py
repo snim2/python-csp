@@ -28,7 +28,7 @@ __date__ = '2010-05-16'
 #DEBUG = True
 DEBUG = False
 
-from functools import wraps # Easy decorators
+from functools import wraps  # Easy decorators
 
 import copy
 import gc
@@ -46,25 +46,22 @@ try:
 except ImportError:
     import pickle
 
-try: # Python optimisation compiler
+try:  # Python optimisation compiler
     import psyco
     psyco.full()
 except ImportError:
-    print ( 'No available optimisation' )
+    print ('No available optimisation')
 
 CSP_IMPLEMENTATION = 'os_thread'
 
-### Names exported by this module
+# Names exported by this module
 __all__ = ['set_debug', 'CSPProcess', 'CSPServer', 'Alt',
            'Par', 'Seq', 'Guard', 'Channel', 'FileChannel',
            'process', 'forever', 'Skip', '_CSPTYPES', 'CSP_IMPLEMENTATION']
-
-### Seeded random number generator (16 bytes)
+# Seeded random number generator (16 bytes)
 
 _RANGEN = random.Random(os.urandom(16))
-
-
-### CONSTANTS
+# CONSTANTS
 
 _BUFFSIZE = 1024
 
@@ -72,6 +69,7 @@ _debug = logging.debug
 
 
 class CorruptedData(Exception):
+
     """Used to verify that data has come from an honest source.
     """
 
@@ -80,30 +78,30 @@ class CorruptedData(Exception):
 
 
 class NoGuardInAlt(Exception):
+
     """Raised when an Alt has no guards to select.
     """
 
     def __str__(self):
         return 'Every Alt must have at least one guard.'
-
-
-### Special constants / exceptions for termination and mobility
-### Better not to use classes/objects here or pickle will get confused
-### by the way that csp.__init__ manages the namespace.
+# Special constants / exceptions for termination and mobility
+# Better not to use classes/objects here or pickle will get confused
+# by the way that csp.__init__ manages the namespace.
 
 _POISON = ';;;__POISON__;;;'
 """Used as special data sent down a channel to invoke termination."""
 
 
 class ChannelPoison(Exception):
+
     """Used to poison a processes and propagate to all known channels.
     """
 
     def __str__(self):
         return 'Posioned channel exception.'
 
+# DEBUGGING
 
-### DEBUGGING
 
 def set_debug(status):
     global DEBUG
@@ -112,10 +110,11 @@ def set_debug(status):
                         stream=sys.stdout)
     logging.info("Using threading version of python-csp.")
 
+# Fundamental CSP concepts -- Processes, Channels, Guards
 
-### Fundamental CSP concepts -- Processes, Channels, Guards
 
 class _CSPOpMixin(object):
+
     """Mixin class used for operator overloading in CSP process types.
     """
 
@@ -162,7 +161,7 @@ class _CSPOpMixin(object):
         """
         if self._Thread__started.is_set():
             _debug('{0} terminating now...'.format(self.getName()))
-            threading.Thread._Thread__stop(self) # Sets an event object
+            threading.Thread._Thread__stop(self)  # Sets an event object
 
     def __gt__(self, other):
         """Implementation of CSP Seq."""
@@ -174,21 +173,22 @@ class _CSPOpMixin(object):
     def __mul__(self, n):
         assert n > 0
         procs = [self]
-        for i in range(n-1):
+        for i in range(n - 1):
             procs.append(copy.copy(self))
         Seq(*procs).start()
 
     def __rmul__(self, n):
         assert n > 0
         procs = [self]
-        for i in range(n-1):
+        for i in range(n - 1):
             procs.append(copy.copy(self))
         Seq(*procs).start()
 
 
 class CSPProcess(threading.Thread, _CSPOpMixin):
+
     """Implementation of CSP processes.
-    
+
     There are two ways to create a new CSP process. Firstly, you can
     use the @process decorator to convert a function definition into a
     CSP Process. Once the function has been defined, calling it will
@@ -198,7 +198,7 @@ class CSPProcess(threading.Thread, _CSPOpMixin):
 >>> @process
 ... def foo(n):
 ...     print 'n:', n
-... 
+...
 >>> foo(100).start()
 >>> n: 100
 
@@ -206,19 +206,19 @@ class CSPProcess(threading.Thread, _CSPOpMixin):
 n: 10
 n: 20
 <Par(Par-5, initial)>
->>> 
+>>>
 
     Alternatively, you can create a CSPProcess object directly and
     pass a function (and its arguments) to the CSPProcess constructor:
 
 >>> def foo(n):
 ...     print 'n:', n
-... 
+...
 >>> p = CSPProcess(foo, 100)
 >>> p.start()
 >>> n: 100
 
->>> 
+>>>
     """
 
     def __init__(self, func, *args, **kwargs):
@@ -226,8 +226,8 @@ n: 20
                                   target=func,
                                   args=(args),
                                   kwargs=kwargs)
-        assert inspect.isfunction(func) # Check we aren't using objects
-        assert not inspect.ismethod(func) # Check we aren't using objects
+        assert inspect.isfunction(func)  # Check we aren't using objects
+        assert not inspect.ismethod(func)  # Check we aren't using objects
 
         _CSPOpMixin.__init__(self)
         for arg in list(self._Thread__args) + list(self._Thread__kwargs.values()):
@@ -257,13 +257,14 @@ n: 20
     def __str__(self):
         return 'CSPProcess running in TID {0}'.format(self.getName())
 
-    def run(self): #, event=None):
+    def run(self):  # , event=None):
         """Called automatically when the L{start} methods is called.
         """
         try:
             self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
         except ChannelPoison:
-            _debug('{0} in {1} got ChannelPoison exception'.format(str(self), self.getPid()))
+            _debug('{0} in {1} got ChannelPoison exception'.format(
+                str(self), self.getPid()))
             self.referent_visitor(self._Thread__args +
                                   tuple(self._Thread__kwargs.values()))
         except KeyboardInterrupt:
@@ -289,6 +290,7 @@ n: 20
 
 
 class CSPServer(CSPProcess):
+
     """Implementation of CSP server processes.
     Not intended to be used in client code. Use @forever instead.
     """
@@ -299,11 +301,12 @@ class CSPServer(CSPProcess):
     def __str__(self):
         return 'CSPServer running in PID {0}'.format(self.getPid())
 
-    def run(self): #, event=None):
+    def run(self):  # , event=None):
         """Called automatically when the L{start} methods is called.
         """
         try:
-            generator = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
+            generator = self._Thread__target(
+                *self._Thread__args, **self._Thread__kwargs)
             while sys.gettrace() is None:
                 next(generator)
             else:
@@ -313,8 +316,10 @@ class CSPServer(CSPProcess):
                 # Be explicit.
                 return None
         except ChannelPoison:
-            _debug('{0} in {1} got ChannelPoison exception'.format(str(self), self.getPid()))
-            self.referent_visitor(self._Thread__args + tuple(self._Thread__kwargs.values()))
+            _debug('{0} in {1} got ChannelPoison exception'.format(
+                str(self), self.getPid()))
+            self.referent_visitor(
+                self._Thread__args + tuple(self._Thread__kwargs.values()))
 #            if self._popen is not None: self.terminate()
         except KeyboardInterrupt:
             sys.exit()
@@ -324,6 +329,7 @@ class CSPServer(CSPProcess):
 
 
 class Alt(_CSPOpMixin):
+
     """CSP select (OCCAM ALT) process.
 
     python-csp process will often have access to several different
@@ -344,13 +350,13 @@ class Alt(_CSPOpMixin):
 >>> @process
 ... def send_msg(chan, msg):
 ...     chan.write(msg)
-... 
+...
 >>> @process
 ... def choice(chan1, chan2):
 ...     # Choice chooses a channel on which to call read()
 ...     print chan1 | chan2
 ...     print chan1 | chan2
-... 
+...
 >>> c1, c2 = Channel(), Channel()
 >>> choice(c1, c2) // (send_msg(c1, 'yes'), send_msg(c2, 'no'))
 yes
@@ -367,13 +373,13 @@ no
 >>> @process
 ... def send_msg(chan, msg):
 ...     chan.write(msg)
-... 
+...
 >>> @process
 ... def alt_example(chan1, chan2):
 ...     alt = Alt(chan1, chan2)
 ...     print alt.select()
 ...     print alt.select()
-... 
+...
 >>> c1, c2 = Channel(), Channel()
 >>> Par(send_msg(c1, 'yes'), send_msg(c2, 'no'), alt_example(c1, c2)).start()
 yes
@@ -395,18 +401,18 @@ no
 >>> @process
 ... def send_msg(chan, msg):
 ...     chan.write(msg)
-... 
+...
 >>> @process
 ... def gen_example(chan1, chan2):
 ...     gen = Alt(chan1, chan2) * 2
 ...     print gen.next()
 ...     print gen.next()
-... 
+...
 >>> c1, c2 = Channel(), Channel()
 >>> Par(send_msg(c1, 'yes'), send_msg(c2, 'no'), gen_example(c1, c2)).start()
 yes
 no
->>> 
+>>>
     """
 
     def __init__(self, *args):
@@ -422,7 +428,7 @@ no
         Sets self.last_selected to None.
         """
         _debug(str(type(self.last_selected)))
-        self.last_selected.disable() # Just in case
+        self.last_selected.disable()  # Just in case
         try:
             self.last_selected.poison()
         except Exception:
@@ -443,7 +449,8 @@ no
         if len(self.guards) == 0:
             raise NoGuardInAlt()
         elif len(self.guards) == 1:
-            _debug('Alt Selecting unique guard: {0}'.format(self.guards[0].name))
+            _debug(
+                'Alt Selecting unique guard: {0}'.format(self.guards[0].name))
             self.last_selected = self.guards[0]
             while not self.guards[0].is_selectable():
                 self.guards[0].enable()
@@ -459,9 +466,10 @@ no
             for guard in self.guards:
                 guard.enable()
                 _debug('Alt enabled all guards')
-            time.sleep(0.01) # Not sure about this.
+            time.sleep(0.01)  # Not sure about this.
             ready = [guard for guard in self.guards if guard.is_selectable()]
-            _debug('Alt got {0} items to choose from out of {1}'.format(len(ready), len(self.guards)))
+            _debug('Alt got {0} items to choose from out of {1}'.format(
+                len(ready), len(self.guards)))
         selected = _RANGEN.choice(ready)
         self.last_selected = selected
         for guard in self.guards:
@@ -481,9 +489,10 @@ no
             for guard in self.guards:
                 guard.enable()
                 _debug('Alt enabled all guards')
-            time.sleep(0.1) # Not sure about this.
+            time.sleep(0.1)  # Not sure about this.
             ready = [guard for guard in self.guards if guard.is_selectable()]
-            _debug('Alt got {0} items to choose from, out of {1}'.format(len(ready), len(self.guards)))
+            _debug('Alt got {0} items to choose from, out of {1}'.format(
+                len(ready), len(self.guards)))
         selected = None
         if self.last_selected in ready and len(ready) > 1:
             ready.remove(self.last_selected)
@@ -507,9 +516,10 @@ no
             for guard in self.guards:
                 guard.enable()
                 _debug('Alt enabled all guards')
-            time.sleep(0.01) # Not sure about this.
+            time.sleep(0.01)  # Not sure about this.
             ready = [guard for guard in self.guards if guard.is_selectable()]
-            _debug('Alt got {0} items to choose from, out of {1}'.format(len(ready), len(self.guards)))
+            _debug('Alt got {0} items to choose from, out of {1}'.format(
+                len(ready), len(self.guards)))
         self.last_selected = ready[0]
         for guard in ready[1:]:
             guard.disable()
@@ -527,6 +537,7 @@ no
 
 
 class Par(threading.Thread, _CSPOpMixin):
+
     """Run CSP processes in parallel.
 
     There are two ways to run processes in parallel.  Firstly, given
@@ -536,13 +547,13 @@ class Par(threading.Thread, _CSPOpMixin):
 >>> @process
 ... def foo(n):
 ...     print 'n:', n
-... 
+...
 >>> foo(1) // (foo(2), foo(3))
 n: 2
 n: 1
 n: 3
 <Par(Par-5, initial)>
->>> 
+>>>
 
     Notice that the // operator takes a CSPProcess on the left hand side
     and a sequence of processes on the right hand side.
@@ -555,7 +566,7 @@ n: 3
 n: 100
 n: 300
 n: 200
->>>     
+>>>
     """
 
     def __init__(self, *procs, **kwargs):
@@ -623,8 +634,10 @@ n: 200
             for proc in self.procs:
                 proc.join()
         except ChannelPoison:
-            _debug('{0} got ChannelPoison exception in {1}'.format(str(self), self.getPid()))
-            self.referent_visitor(self._Thread__args + tuple(self._Thread__kwargs.values()))
+            _debug('{0} got ChannelPoison exception in {1}'.format(
+                str(self), self.getPid()))
+            self.referent_visitor(
+                self._Thread__args + tuple(self._Thread__kwargs.values()))
         except KeyboardInterrupt:
             sys.exit()
         except Exception:
@@ -649,6 +662,7 @@ n: 200
 
 
 class Seq(threading.Thread, _CSPOpMixin):
+
     """Run CSP processes sequentially.
 
     There are two ways to run processes in sequence.  Firstly, given
@@ -658,13 +672,13 @@ class Seq(threading.Thread, _CSPOpMixin):
 >>> @process
 ... def foo(n):
 ...     print 'n:', n
-... 
+...
 >>> foo(1) > foo(2) > foo(3)
 n: 1
 n: 2
 n: 3
 <Seq(Seq-14, initial)>
->>> 
+>>>
 
     Secondly, you can create a Seq object which is a sort of CSP
     process and start that process manually:
@@ -700,19 +714,23 @@ n: 300
                 _CSPOpMixin.start(proc)
                 proc.join()
         except ChannelPoison:
-            _debug('{0} got ChannelPoison exception in {1}'.format(str(self), self.getPid()))
-            self.referent_visitor(self._Thread__args + tuple(self._Thread__kwargs.values()))
-            if self._popen is not None: self.terminate()
+            _debug('{0} got ChannelPoison exception in {1}'.format(
+                str(self), self.getPid()))
+            self.referent_visitor(
+                self._Thread__args + tuple(self._Thread__kwargs.values()))
+            if self._popen is not None:
+                self.terminate()
         except KeyboardInterrupt:
             sys.exit()
         except Exception:
             typ, excn, tback = sys.exc_info()
             sys.excepthook(typ, excn, tback)
 
-
 ### Guards and channels
 
+
 class Guard(object):
+
     """Abstract class to represent CSP guards.
 
     All methods must be overridden in subclasses.
@@ -756,6 +774,7 @@ class Guard(object):
 
 
 class Channel(Guard):
+
     """CSP Channel objects.
 
     In python-csp there are two sorts of channel. In JCSP terms these
@@ -780,7 +799,7 @@ class Channel(Guard):
 
 >>> print c.name
 1ca98e40-5558-11df-8e5b-002421449824
->>> 
+>>>
 
     The Channel can then be passed as an argument to any CSP process
     and then be used either to read (using the .read() method) or to
@@ -789,16 +808,16 @@ class Channel(Guard):
 >>> @process
 ... def send(cout, data):
 ...     cout.write(data)
-... 
+...
 >>> @process
 ... def recv(cin):
 ...     print 'Got:', cin.read()
-... 
+...
 >>> c = Channel()
 >>> send(c, 100) // (recv(c),)
 Got: 100
 <Par(Par-3, initial)>
->>> 
+>>>
     """
 
     TRUE = 1
@@ -806,15 +825,18 @@ Got: 100
 
     def __init__(self):
         self.name = uuid.uuid1()
-        self._wlock = None       # Write lock protects from races between writers.
-        self._rlock = None       # Read lock protects from races between readers.
+        # Write lock protects from races between writers.
+        self._wlock = None
+        # Read lock protects from races between readers.
+        self._rlock = None
         self._plock = None
-        self._available = None     # Released if writer has made data available.
+        # Released if writer has made data available.
+        self._available = None
         self._taken = None         # Released if reader has taken data.
         self._is_alting = None     # True if engaged in an Alt synchronisation.
-        self._is_selectable = None # True if can be selected by an Alt.
+        self._is_selectable = None  # True if can be selected by an Alt.
         self._has_selected = None  # True if already been committed to select.
-        self._store = None # Holds value transferred by channel
+        self._store = None  # Holds value transferred by channel
         self._poisoned = None
         self._setup()
         super(Channel, self).__init__()
@@ -826,8 +848,8 @@ Got: 100
         MUST be called in __init__ of this class and all subclasses.
         """
         # Process-safe synchronisation.
-        self._wlock = threading.RLock()	# Write lock.
-        self._rlock = threading.RLock()	# Read lock.
+        self._wlock = threading.RLock()    # Write lock.
+        self._rlock = threading.RLock()    # Read lock.
         self._plock = threading.Lock()  # Fix poisoning.
         self._available = threading.Semaphore(0)
         self._taken = threading.Semaphore(0)
@@ -851,14 +873,15 @@ Got: 100
         """
         self.checkpoison()
         item = self._store
-#        item = pickle.loads(self._store)
+        #        item = pickle.loads(self._store)
         self._store = None
         return item
 
     def is_selectable(self):
         """Test whether Alt can select this channel.
         """
-        _debug('Alt THINKS _is_selectable IS: {0}'.format(str(self._is_selectable)))
+        _debug('Alt THINKS _is_selectable IS: {0}'.format(
+            str(self._is_selectable)))
         self.checkpoison()
         return self._is_selectable
 
@@ -867,7 +890,7 @@ Got: 100
         """
         self.checkpoison()
         _debug('+++ Write on Channel {0} started.'.format(self.name))
-        with self._wlock: # Protect from races between multiple writers.
+        with self._wlock:  # Protect from races between multiple writers.
             # If this channel has already been selected by an Alt then
             # _has_selected will be True, blocking other readers. If a
             # new write is performed that flag needs to be reset for
@@ -877,7 +900,8 @@ Got: 100
             self.put(obj)
             # Announce the object has been released to the reader.
             self._available.release()
-            _debug('++++ Writer on Channel {0}: _available: {1} _taken: {2}.'.format(self.name, self._available._Semaphore__value, self._taken._Semaphore__value))
+            _debug('++++ Writer on Channel {0}: _available: {1} _taken: {2}.'.format(
+                self.name, self._available._Semaphore__value, self._taken._Semaphore__value))
             # Block until the object has been read.
             self._taken.acquire()
             # Remove the object from the channel.
@@ -888,9 +912,10 @@ Got: 100
         """
         self.checkpoison()
         _debug('+++ Read on Channel {0} started.'.format(self.name))
-        with self._rlock: # Protect from races between multiple readers.
+        with self._rlock:  # Protect from races between multiple readers.
             # Block until an item is in the Channel.
-            _debug('++++ Reader on Channel {0}: _available: {1} _taken: {2}.'.format(self.name, self._available._Semaphore__value, self._taken._Semaphore__value))
+            _debug('++++ Reader on Channel {0}: _available: {1} _taken: {2}.'.format(
+                self.name, self._available._Semaphore__value, self._taken._Semaphore__value))
             self._available.acquire()
             # Get the item.
             obj = self.get()
@@ -912,12 +937,13 @@ Got: 100
         self._is_alting = True
         with self._rlock:
             # Attempt to acquire _available.
-            time.sleep(0.00001) # Won't work without this -- why?
-            if  self._available.acquire(blocking=False):
+            time.sleep(0.00001)  # Won't work without this -- why?
+            if self._available.acquire(blocking=False):
                 self._is_selectable = True
             else:
                 self._is_selectable = False
-        _debug('Enable on guard {0} _is_selectable: {1} _available: {2}'.format(self.name, str(self._is_selectable), str(self._available)))
+        _debug('Enable on guard {0} _is_selectable: {1} _available: {2}'.format(
+            self.name, str(self._is_selectable), str(self._available)))
 
     def disable(self):
         """Disable this channel for Alt selection.
@@ -938,7 +964,8 @@ Got: 100
         _debug('channel select starting')
         assert self._is_selectable == True
         with self._rlock:
-            _debug('got read lock on channel {0} _available: {1}'.format(self.name, str(self._available._Semaphore__value)))
+            _debug('got read lock on channel {0} _available: {1}'.format(
+                self.name, str(self._available._Semaphore__value)))
             # Obtain object on Channel.
             obj = self.get()
             _debug('Writer got obj')
@@ -961,7 +988,8 @@ Got: 100
     def checkpoison(self):
         with self._plock:
             if self._poisoned:
-                _debug('{0} is poisoned. Raising ChannelPoison()'.format(self.name))
+                _debug(
+                    '{0} is poisoned. Raising ChannelPoison()'.format(self.name))
                 raise ChannelPoison()
 
     def poison(self):
@@ -979,7 +1007,7 @@ Got: 100
 ...             cout.write(i)
 ...             time.sleep(random.random() * 5)
 ...     return
-... 
+...
 >>> @process
 ... def recv(cin):
 ...     for i in xrange(5):
@@ -987,14 +1015,14 @@ Got: 100
 ...             print 'recv got:', data
 ...             time.sleep(random.random() * 5)
 ...     return
-... 
+...
 >>> @process
 ... def interrupt(chan):
 ...     time.sleep(random.random() * 7)
 ...     print 'Poisoning channel:', chan.name
 ...     chan.poison()
 ...     return
-... 
+...
 >>> doomed = Channel()
 >>> send(doomed) // (recv(doomed), poison(doomed))
 send5 sending: 0
@@ -1009,16 +1037,17 @@ send5 sending: 4
 recv got: 4
 Poisoning channel: 5c906e38-5559-11df-8503-002421449824
 <Par(Par-5, initial)>
->>> 
+>>>
         """
         with self._plock:
             self._poisoned = True
             # Avoid race conditions on any waiting readers / writers.
-            self._available.release() 
+            self._available.release()
             self._taken.release()
 
 
 class FileChannel(Channel):
+
     """Channel objects using files on disk.
 
     C{FileChannel} objects close their files after each read or write
@@ -1031,8 +1060,8 @@ class FileChannel(Channel):
 
     def __init__(self):
         self.name = uuid.uuid1()
-        self._wlock = None	# Write lock.
-        self._rlock = None	# Read lock.
+        self._wlock = None    # Write lock.
+        self._rlock = None    # Read lock.
         self._available = None
         self._taken = None
         self._is_alting = None
@@ -1075,8 +1104,8 @@ class FileChannel(Channel):
     def __str__(self):
         return 'Channel using files for IPC.'
 
+# Function decorators
 
-### Function decorators
 
 def process(func):
     """Decorator to turn a function into a CSP process.
@@ -1090,7 +1119,7 @@ def process(func):
 >>> @process
 ... def foo(n):
 ...     print 'n:', n
-... 
+...
 >>> foo(100).start()
 >>> n: 100
 
@@ -1098,20 +1127,21 @@ def process(func):
 n: 10
 n: 20
 <Par(Par-5, initial)>
->>> 
+>>>
 
     Alternatively, you can create a CSPProcess object directly and pass a
     function (and its arguments) to the CSPProcess constructor:
 
 >>> def foo(n):
 ...     print 'n:', n
-... 
+...
 >>> p = CSPProcess(foo, 100)
 >>> p.start()
 >>> n: 100
 
->>> 
+>>>
     """
+
     @wraps(func)
     def _call(*args, **kwargs):
         """Call the target function."""
@@ -1144,7 +1174,7 @@ def forever(func):
 ...             print n
 ...             n += 1
 ...             yield
-... 
+...
 >>> integers().start()
 >>> 0
 1
@@ -1165,7 +1195,7 @@ KeyboardInterrupt
 ...             print n
 ...             n += 1
 ...             yield
-... 
+...
 >>> i = CSPServer(integers)
 >>> i.start()
 >>> 0
@@ -1175,16 +1205,16 @@ KeyboardInterrupt
 4
 5
 ...
-KeyboardInterrupt    
+KeyboardInterrupt
     """
+
     @wraps(func)
     def _call(*args, **kwargs):
         """Call the target function."""
         return CSPServer(func, *args, **kwargs)
     return _call
 
-
-### List of CSP based types (class names). Used by _is_csp_type.
+# List of CSP based types (class names). Used by _is_csp_type.
 _CSPTYPES = [CSPProcess, Par, Seq, Alt]
 
 
@@ -1198,6 +1228,7 @@ def _nop():
 
 
 class Skip(CSPProcess, Guard):
+
     """Guard which will always return C{True}. Useful in L{Alt}s where
     the programmer wants to ensure that L{Alt.select} will always
     synchronise with at least one guard.
@@ -1213,13 +1244,13 @@ class Skip(CSPProcess, Guard):
 >>> alt = Alt(Skip())
 >>> for i in xrange(5):
 ...     print alt.select()
-... 
+...
 Skip
 Skip
 Skip
 Skip
 Skip
->>> 
+>>>
 
     Where you have an Alt() object which mixes Skip() with other guard
     types, be sure to complete all necessary channel reads or other
@@ -1249,4 +1280,3 @@ Skip
 
     def __str__(self):
         return 'Skip guard is always selectable / process does nothing.'
-

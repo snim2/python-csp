@@ -39,10 +39,14 @@ def simulate(poschan, SIZE):
         centre = [centre[0] + velocity[0],
                   centre[1] + velocity[1]]
         # Wrap the screen.
-        if centre[0]<0: centre[0] += SIZE[0]
-        elif centre[0]>SIZE[0]: centre[0] -= SIZE[0]
-        if centre[1]<0: centre[1] += SIZE[1]
-        elif centre[1]>SIZE[1]: centre[1] -= SIZE[1]
+        if centre[0] < 0:
+            centre[0] += SIZE[0]
+        elif centre[0] > SIZE[0]:
+            centre[0] -= SIZE[0]
+        if centre[1] < 0:
+            centre[1] += SIZE[1]
+        elif centre[1] > SIZE[1]:
+            centre[1] -= SIZE[1]
         # Write to the drawing process.
         poschan.write(centre)
     return
@@ -57,12 +61,12 @@ def drawboids(poschans, SIZE):
     import pygame
 
     FGCOL = (137, 192, 210, 100)  # Foreground colour.
-    BGCOL = pygame.Color('black') # Background colour.
+    BGCOL = pygame.Color('black')  # Background colour.
     FPS = 60                      # Maximum frames per second.
     CAPTION = 'python-csp example: Boids'
     FILENAME = 'boids.png'        # Screenshot file.
     QUIT = False
-    
+
     clock = pygame.time.Clock()
     dirty, last = [], []
 #    chansize = len(poschans)
@@ -75,7 +79,8 @@ def drawboids(poschans, SIZE):
         ms_elapsed = clock.tick(FPS)
         print(ms_elapsed)
         dirty = last
-        for rect in last: screen.fill(BGCOL, rect)
+        for rect in last:
+            screen.fill(BGCOL, rect)
         last = []
         for channel in poschans:
             x, y = channel.read()
@@ -83,13 +88,14 @@ def drawboids(poschans, SIZE):
             dirty.append(rect)
             last.append(rect)
         pygame.display.update(dirty)     # Update dirty rects.
-        for event in pygame.event.get(): # Process events.
+        for event in pygame.event.get():  # Process events.
             if event.type == pygame.QUIT:
                 QUIT = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
                 pygame.image.save(screen, FILENAME)
                 print('Saving boids in:', FILENAME)
-    for chan in poschans: chan.poison()
+    for chan in poschans:
+        chan.poison()
     pygame.quit()
     return
 
@@ -104,7 +110,7 @@ def main():
 #    drawchan = Channel()
     # Generate a list of all processes in the simulation.
     procs = [simulate(poschans[i], SIZE) for i in range(NUMBOIDS)]
-    procs.append(drawboids(poschans, SIZE)) # Drawing process.
+    procs.append(drawboids(poschans, SIZE))  # Drawing process.
     simulation = Par(*procs)          # Start simulation.
     simulation.start()
     return

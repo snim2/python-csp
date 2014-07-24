@@ -36,6 +36,7 @@ def hello():
         print i
         t.sleep(1)
 
+
 @process
 def send_recv(n):
     chan = Channel()
@@ -117,7 +118,7 @@ def recv100(cin):
 
 
 class MethodProcs(object):
-    
+
     def __init__(self):
         self.chan = Channel()
         return
@@ -178,11 +179,12 @@ def testAlt1(cin):
     writeset =
     """
     alt = Alt(cin)
-    numeric = 0 
+    numeric = 0
     while numeric < 1:
         print('*** TestAlt1 selecting...')
         val = alt.select()
-        if isinstance(val, int): numeric += 1 
+        if isinstance(val, int):
+            numeric += 1
         print('* Got this from Alt:' + str(val))
     return
 
@@ -194,11 +196,12 @@ def testAlt2(cin1, cin2, cin3):
     writeset =
     """
     alt = Alt(Skip(), cin1, cin2, cin3)
-    numeric = 0 
+    numeric = 0
     while numeric < 3:
         print('*** TestAlt2 selecting...')
         val = alt.select()
-        if isinstance(val, int): numeric +=1
+        if isinstance(val, int):
+            numeric += 1
         print('* Got this from Alt:' + str(val))
     return
 
@@ -209,13 +212,14 @@ def testAlt3(cin1, cin2, cin3):
     readset = cin1, cin2, cin3
     writeset =
     """
-    # For obvious reasons, SKIP cannot go first 
+    # For obvious reasons, SKIP cannot go first
     alt = Alt(cin1, cin2, cin3, Skip())
     numeric = 0
     while numeric < 3:
-        print('*** TestAlt3 selecting...')        
+        print('*** TestAlt3 selecting...')
         val = alt.pri_select()
-        if isinstance(val, int): numeric +=1
+        if isinstance(val, int):
+            numeric += 1
         print('* Got this from Alt:' + str(val))
     return
 
@@ -229,9 +233,10 @@ def testAlt4(cin1, cin2, cin3):
     alt = Alt(Skip(), cin1, cin2, cin3)
     numeric = 0
     while numeric < 3:
-        print('*** TestAlt4 selecting...')        
+        print('*** TestAlt4 selecting...')
         val = alt.fair_select()
-        if isinstance(val, int): numeric +=1
+        if isinstance(val, int):
+            numeric += 1
         print('* Got this from Alt:' + str(val))
     return
 

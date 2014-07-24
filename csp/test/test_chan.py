@@ -34,6 +34,7 @@ def test_channels_one_chan_per_proc_pair():
     pp.start()
     return
 
+
 def test_channels_many_proc_one_chan():
     chan = Channel()
     p = [send1(chan) for i in range(5)] + [recv1(chan) for i in range(5)]

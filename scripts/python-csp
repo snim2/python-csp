@@ -43,11 +43,13 @@ __date__ = 'December 2008'
 
 
 class _Printer(object):
+
     """Print documentation in twenty-line chunks.
 
     Based on a class of the same name from the site.py module.
     """
     MAXLINES = 20
+
     def __init__(self, documentation):
         self.__lines = documentation.split('\n')
         self.__linecnt = len(self.__lines)
@@ -68,12 +70,14 @@ class _Printer(object):
                     key = input(prompt)
                 if key == 'q':
                     break
-                print() 
+                print()
 
 
 class TabSafeCompleter(rlcompleter.Completer):
+
     """Enable safe use of Tab for either tab completion or nested scope.
     """
+
     def complete(self, text, state):
         if text == '':
             return ['\t', None][state]
@@ -82,6 +86,7 @@ class TabSafeCompleter(rlcompleter.Completer):
 
 
 class CSPConsole(code.InteractiveConsole):
+
     """python-csp interactive console with REPL.
 
     Features:
@@ -92,6 +97,7 @@ class CSPConsole(code.InteractiveConsole):
     """
 
     # From the docs of the readline module.
+
     def __init__(self, locals=None, filename="<console>",
                  histfile=os.path.expanduser("~/.csp-console-history")):
         code.InteractiveConsole.__init__(self)
@@ -124,5 +130,5 @@ if __name__ == '__main__':
     # Don't expect the csp types to be available in locals()
     c.push('from csp.csp import *')
     c.push('from csp.builtins import *')
-    c.push('from csp.guards import *')    
+    c.push('from csp.guards import *')
     c.interact(banner=_ban)

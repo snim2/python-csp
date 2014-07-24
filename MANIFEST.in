@@ -1,39 +1,39 @@
 include README.md ChangeLog LICENSE
-include scripts/python-csp
+include scripts / python - csp
 
 # added by check_manifest.py
-include *.bat
-include *.bib
-include *.in
-include *.txt
+include * .bat
+include * .bib
+include * .in
+include * .txt
 include .travis.yml
 include Makefile
-recursive-include benchmark *.mcsp
-recursive-include benchmark *.py
-recursive-include benchmark3 *.mcsp
-recursive-include benchmark3 *.py
-recursive-include csp *.c
-recursive-include csp *.h
-recursive-include csp *.i
-recursive-include csp *.py
-recursive-include csp3 *.c
-recursive-include csp3 *.h
-recursive-include csp3 *.i
-recursive-include csp3 *.py
-recursive-include examples *.dia
-recursive-include examples *.occ
-recursive-include examples *.png
-recursive-include examples *.py
-recursive-include examples3 *.dia
-recursive-include examples3 *.occ
-recursive-include examples3 *.png
-recursive-include examples3 *.py
-recursive-include rst *.conf
-recursive-include rst *.css
-recursive-include rst *.css_t
-recursive-include rst *.dia
-recursive-include rst *.html
-recursive-include rst *.png
-recursive-include rst *.py
-recursive-include rst *.rst
-recursive-include rst *.xcf
+recursive - include benchmark * .mcsp
+recursive - include benchmark * .py
+recursive - include benchmark3 * .mcsp
+recursive - include benchmark3 * .py
+recursive - include csp * .c
+recursive - include csp * .h
+recursive - include csp * .i
+recursive - include csp * .py
+recursive - include csp3 * .c
+recursive - include csp3 * .h
+recursive - include csp3 * .i
+recursive - include csp3 * .py
+recursive - include examples * .dia
+recursive - include examples * .occ
+recursive - include examples * .png
+recursive - include examples * .py
+recursive - include examples3 * .dia
+recursive - include examples3 * .occ
+recursive - include examples3 * .png
+recursive - include examples3 * .py
+recursive - include rst * .conf
+recursive - include rst * .css
+recursive - include rst * .css_t
+recursive - include rst * .dia
+recursive - include rst * .html
+recursive - include rst * .png
+recursive - include rst * .py
+recursive - include rst * .rst
+recursive - include rst * .xcf

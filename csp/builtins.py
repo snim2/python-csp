@@ -21,7 +21,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from __future__ import absolute_import 
+from __future__ import absolute_import
 
 import math
 import operator
@@ -34,8 +34,6 @@ from .csp import *
 
 __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = 'May 2010'
-
-
 # Names exported by this module.
 
 __all__ = ['Sin', 'Cos', 'GenerateFloats',
@@ -55,7 +53,7 @@ __all__ = ['Sin', 'Cos', 'GenerateFloats',
 def GenerateFloats(outchan, increment=0.1):
     """
     readset =
-    writeset =    
+    writeset =
     """
     counter = 0
     while True:
@@ -120,7 +118,7 @@ def Prefix(cin, cout, prefix_item=None):
 
     readset = cin
     writeset = cout
-    
+
     @type prefix_item: object
     @param prefix_item: prefix value to use before first item read from L{cin}.
     """
@@ -204,7 +202,7 @@ def Mult(cin, cout, scale):
 def Generate(cout):
     """Generate successive (+ve) ints and write to L{cout}.
 
-    readset = 
+    readset =
     writeset = cout
     """
     counter = 0
@@ -249,7 +247,7 @@ def Blackhole(cin):
     """Read values from L{cin} and do nothing with them.
 
     readset = cin
-    writeset = 
+    writeset =
     """
     while True:
         cin.read()
@@ -268,8 +266,8 @@ def Sign(cin, cout, prefix):
         cout.write(prefix + str(val))
         yield
 
+# Magic for processes built on Python operators
 
-### Magic for processes built on Python operators
 
 def _applyunop(unaryop, docstring):
     """Create a process whose output is C{unaryop(cin.read())}.
@@ -309,12 +307,10 @@ def _applybinop(binop, docstring):
     _myproc.__doc__ = docstring + chandoc
     return _myproc
 
-
 # Use some abbreviations to shorten definitions.
 unop = _applyunop
 binop = _applybinop
 op = operator
-
 # Numeric operators
 
 Plus = binop(op.add, "Emits the sum of two input events.")
@@ -330,7 +326,6 @@ Cos = unop(math.cos, "Emit the cosine of input events.")
 
 Pairs = Plus
 Multiply = Mul
-
 # Bitwise operators
 
 Not = unop(op.invert, "Emits the inverse of input events.")
@@ -338,14 +333,15 @@ And = binop(op.and_, "Emits the bitwise and of two input events.")
 Or = binop(op.or_, "Emits the bitwise or of two input events.")
 Nand = binop(lambda x, y: ~(x & y),
              "Emits the bitwise nand of two input events.")
-Nor = binop(lambda x, y: ~(x | y), "Emits the bitwise nor of two input events.")
+Nor = binop(
+    lambda x, y: ~(x | y), "Emits the bitwise nor of two input events.")
 Xor = binop(op.xor, "Emits the bitwise xor of two input events.")
 LShift = binop(op.lshift, "Emits the left shift of two input events.")
 RShift = binop(op.rshift, "Emits the right shift of two input events.")
-
 # Logical operators
 
-Land = binop(lambda x, y: x and y, "Emits the logical and of two input events.")
+Land = binop(
+    lambda x, y: x and y, "Emits the logical and of two input events.")
 Lor = binop(lambda x, y: x or y, "Emits the logical or of two input events.")
 Lnot = unop(op.not_, "Emits the logical not of input events.")
 Lnand = binop(lambda x, y: not (x and y),
@@ -354,10 +350,9 @@ Lnor = binop(lambda x, y: not (x or y),
              "Emits the logical nor of two input events.")
 Lxor = binop(lambda x, y: (x or y) and (not x and y),
              "Emits the logical xor of two input events.")
-
 # Comparison operators
 
-Eq = binop(op.eq,"Emits True if two input events are equal (==).")
+Eq = binop(op.eq, "Emits True if two input events are equal (==).")
 Ne = binop(op.ne, "Emits True if two input events are not equal (not ==).")
 Geq = binop(op.ge, "Emits True if first input event is >= second.")
 Leq = binop(op.le, "Emits True if first input event is <= second.")
@@ -367,4 +362,3 @@ Is = binop(op.is_, "Emits True if two input events are identical.")
 Is_Not = binop(op.is_not, "Emits True if two input events are not identical.")
 
 del unop, binop, op
-

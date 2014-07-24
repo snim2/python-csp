@@ -69,11 +69,11 @@ if __name__ == '__main__':
 
     parser = OptionParser()
 
-    parser.add_option('-t', '--tokens', dest='tokens', 
+    parser.add_option('-t', '--tokens', dest='tokens',
                       action='store', type="int",
                       default=1,
                       help='Number of tokens in token ring')
-    parser.add_option('-n', '--nodes', dest='nodes', 
+    parser.add_option('-n', '--nodes', dest='nodes',
                       action='store', type="int",
                       default=64,
                       help='Number of nodes in token ring')

@@ -51,6 +51,7 @@ def Bool1(cout):
         cout.write(0)
     return
 
+
 @process
 def Bool2(cout):
     """
@@ -63,6 +64,7 @@ def Bool2(cout):
         cout.write(1)
         cout.write(0)
     return
+
 
 def fulladder(A_in, B_in, C_in, Sum_in, Carry_in):
     """Full adder implementation.
@@ -113,4 +115,3 @@ if __name__ == '__main__':
                 Sign(Sum, PSum, 'Sum: '),
                 Printer(PSum))
     adder.start()
-

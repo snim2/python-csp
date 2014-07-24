@@ -34,11 +34,14 @@ def Current(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexCurrent()
     senbsor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         current = sensor.get_data()[1]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write(current)
-        if debugchan is not None: debugchan.write(current)
+        if debugchan is not None:
+            debugchan.write(current)
         yield
     return
 
@@ -51,11 +54,14 @@ def MagR(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexMagR()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         mag, angle = sensor.get_data()[1:]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write((mag, angle))
-        if debugchan is not None: debugchan.write((mag, angle))
+        if debugchan is not None:
+            debugchan.write((mag, angle))
         yield
     return
 
@@ -68,11 +74,14 @@ def Motion(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexMotion()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         motion = sensor.get_data()[1]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write(motion)
-        if debugchan is not None: debugchan.write(motion)
+        if debugchan is not None:
+            debugchan.write(motion)
         yield
     return
 
@@ -85,11 +94,14 @@ def Dist(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexDist()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         dist = sensor.get_data()[1]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write(dist)
-        if debugchan is not None: debugchan.write(dist)
+        if debugchan is not None:
+            debugchan.write(dist)
         yield
     return
 
@@ -102,11 +114,14 @@ def Tilt(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexTilt()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         accel, zen, azi = sensor.get_data()[1:]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write((accel, zen, azi))
-        if debugchan is not None: debugchan.write((accel, zen, azi))
+        if debugchan is not None:
+            debugchan.write((accel, zen, azi))
         yield
     return
 
@@ -119,11 +134,14 @@ def Lux(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexLux()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         lux = sensor.get_data()[1]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write(lux)
-        if debugchan is not None: debugchan.write(lux)
+        if debugchan is not None:
+            debugchan.write(lux)
         yield
     return
 
@@ -136,11 +154,14 @@ def Accelerometer(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexG()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         x, y, z = sensor.get_data()[1:]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write((x, y, z))
-        if debugchan is not None: debugchan.write((x, y, z))
+        if debugchan is not None:
+            debugchan.write((x, y, z))
         yield
     return
 
@@ -153,11 +174,14 @@ def RelativeHumidity(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexRH()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         rh, temp = sensor.get_data()[1:]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write((rh, temp))
-        if debugchan is not None: debugchan.write((rh, temp))
+        if debugchan is not None:
+            debugchan.write((rh, temp))
         yield
     return
 
@@ -170,11 +194,14 @@ def Pressure(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexP()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         press, temp = sensor.get_data()[1:]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write((press, temp))
-        if debugchan is not None: debugchan.write((press, temp))
+        if debugchan is not None:
+            debugchan.write((press, temp))
         yield
     return
 
@@ -187,11 +214,14 @@ def A2D8Channel(outchan, debugchan=None, blink=True, _process=None):
     sensor = ToradexG()
     sensor.open()
     while True:
-        if blink: sensor.led_on()
+        if blink:
+            sensor.led_on()
         data = sensor.get_data()[1:]
-        if blink: sensor.led_off()
+        if blink:
+            sensor.led_off()
         outchan.write(data)
-        if debugchan is not None: debugchan.write(data)
+        if debugchan is not None:
+            debugchan.write(data)
         yield
     return
 

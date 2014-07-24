@@ -37,6 +37,7 @@ _RANGEN = random.Random(os.urandom(16))
 
 
 class GuardedAlt(Alt):
+
     """Guarded selection, as in OCCAM.
 
     In this form of ALTing, the GuardedAlt object is passed a list of
@@ -53,12 +54,13 @@ class GuardedAlt(Alt):
 
     will print the result of reading from c2 as soon as c2 is blocked
     on the offer of a channel write.
-    
+
     Maybe this should be the default implementation of Alting? A great
     deal of code is shared between the Alt class and GuardedAlt. I
     have left this in, for backwards compatibility and efficiency, but
     it should probably be looked at again.
     """
+
     def __init__(self, *args):
         super(GuardedAlt, self).__init__()
         for (call, guard) in args:
@@ -78,7 +80,7 @@ class GuardedAlt(Alt):
         Sets self.last_selected to None.
         """
         logging.debug(str(type(self.last_selected)))
-        self.last_selected.disable() # Just in case
+        self.last_selected.disable()  # Just in case
         try:
             self.last_selected.poison()
         except Exception:
@@ -113,30 +115,31 @@ class GuardedAlt(Alt):
             for (call, guard) in self.guards:
                 if call() and guard.is_selectable():
                     ready.append(guard)
-            logging.debug('Alt got {0} items to choose from out of {1}'.format(len(ready), len(self.guards)))
+            logging.debug('Alt got {0} items to choose from out of {1}'.format(
+                len(ready), len(self.guards)))
         selected = _RANGEN.choice(ready)
         self.last_selected = selected
         for call, guard in self.guards:
             if guard is not selected:
                 guard.disable()
         return selected.select()
-    
+
 
 @process
 def BoundedQueue(cin, cout, maxsize):
     """Port of Michael Spark's OCCAM code.
     """
-    
+
     @process
     def inproc(chan_in, chan_next, chan_pass):
         queue = []
-        alt = GuardedAlt((lambda : len(queue) < maxsize, chan_in),
-                         (lambda : len(queue) > 0, chan_next))
+        alt = GuardedAlt((lambda: len(queue) < maxsize, chan_in),
+                         (lambda: len(queue) > 0, chan_next))
         while True:
             msg = alt.select()
             if alt.last_selected == chan_in:
                 queue.append(msg)
-                print 'QUEUE:', queue # Bad style
+                print 'QUEUE:', queue  # Bad style
             elif alt.last_selected == chan_next:
                 chan_pass.write(queue[0])
                 queue = queue[1:]
@@ -147,11 +150,11 @@ def BoundedQueue(cin, cout, maxsize):
             chan_next.write("ANY")
             msg = chan_pass.read()
             chan_out.write(msg)
-    
+
     chan_pass, chan_next = Channel(), Channel()
     Par(inproc(cin, chan_next, chan_pass),
         outproc(chan_next, chan_pass, cout)).start()
-    
+
 
 @process
 def test_queue():
@@ -169,7 +172,7 @@ def test_queue():
 @process
 def test_alt(cout1, cout2):
     alt = Alt(cout1)           # Simplest case, should act like read.
-#    alt = Alt(cout1, cout2)   # Basic test.
+# alt = Alt(cout1, cout2)   # Basic test.
 #    alt = GuardedAlt((lambda: True, cout1), (lambda: True, cout))
     while True:
         print alt.select()
@@ -181,6 +184,6 @@ def test_runner():
     Par(Generate(chan1), Generate(chan2), test_alt(chan1, chan2)).start()
 
 if __name__ == '__main__':
-#    set_debug(True)
+    #    set_debug(True)
     test_runner().start()
 #    test_queue().start()

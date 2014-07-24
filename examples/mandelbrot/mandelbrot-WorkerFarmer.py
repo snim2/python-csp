@@ -31,7 +31,8 @@ __author__ = 'Sam Wilson'
 __credits__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = 'December 2008'
 
-# Amended 2012-08-23 by Russel Winder <russel@winder.org.uk> to switch from Numeric to NumPy.
+# Amended 2012-08-23 by Russel Winder <russel@winder.org.uk> to switch
+# from Numeric to NumPy.
 
 MAXITER = 100
 """@var: Number of iterations used to determine each pixel of the fractal image.
@@ -58,11 +59,11 @@ def get_colour(mag, cmin=0, cmax=100):
     @return: An integer tuple representing an RGB value.
     """
     assert cmin != cmax
-    a = float(mag-cmin)/(cmax-cmin)
-    blue = min((max((4*(0.75-a),0.)),1.))
-    red = min((max((4*(a-0.25),0.)),1.))
-    green = min((max((4*math.fabs(a-0.5)-1.,0)),1.))
-    return int(255*red), int(255*green), int(255*blue)
+    a = float(mag - cmin) / (cmax - cmin)
+    blue = min((max((4 * (0.75 - a), 0.)), 1.))
+    red = min((max((4 * (a - 0.25), 0.)), 1.))
+    green = min((max((4 * math.fabs(a - 0.5) - 1., 0)), 1.))
+    return int(255 * red), int(255 * green), int(255 * blue)
 
 
 @process
@@ -92,27 +93,28 @@ def mandelbrot(xcoord, dimension, cout, acorn=-2.0, bcorn=-1.250):
     """
     (width, height) = dimension
     # nu implements the normalized iteration count algorithm
-    nu = lambda zz, n: n + 1 - math.log(math.log(abs(zz)))/math.log(2)
+    nu = lambda zz, n: n + 1 - math.log(math.log(abs(zz))) / math.log(2)
     imgcolumn = [0. for i in range(height)]
 
     while 1:
         for ycoord in range(height):
             z = complex(0., 0.)
-            c = complex(acorn + xcoord*2.5/float(width),
-                        bcorn + ycoord*2.5/float(height))
+            c = complex(acorn + xcoord * 2.5 / float(width),
+                        bcorn + ycoord * 2.5 / float(height))
             for i in range(MAXITER):
-                z = complex(z.real**2 - z.imag**2 + c.real,
-                        2*z.real*z.imag + c.imag)
-                if abs(z)**2 > 4: break
+                z = complex(z.real ** 2 - z.imag ** 2 + c.real,
+                            2 * z.real * z.imag + c.imag)
+                if abs(z) ** 2 > 4:
+                    break
             if i == MAXITER - 1:
-            # Point lies inside the Mandelbrot set.
-                colour = (0,0,0)
+                # Point lies inside the Mandelbrot set.
+                colour = (0, 0, 0)
             else:
-            # Point lies outside the Mandelbrot set.
-                colour = get_colour(nu(z, i),0, cmax=MAXITER)
+                # Point lies outside the Mandelbrot set.
+                colour = get_colour(nu(z, i), 0, cmax=MAXITER)
             imgcolumn[ycoord] = colour
         cout.write((xcoord, imgcolumn))
-        #print '\nhere {0}'.format(xcoord)
+        # print '\nhere {0}'.format(xcoord)
         xcoord = cout.read()
         if xcoord == -1:
             return
@@ -156,7 +158,7 @@ def consume(IMSIZE, filename, cins):
             j += 1
         else:
             alt.last_selected.write(-1)
-    print('TIME TAKEN: ' + str(time.time() - t0) +'seconds.')
+    print('TIME TAKEN: ' + str(time.time() - t0) + 'seconds.')
     logging.debug('Consumer drawing image on screen')
     pygame.image.save(screen, filename)
     logging.info('Consumer finished processing image data')
@@ -204,7 +206,8 @@ def main(IMSIZE, filename, granularity=10, level='info'):
     mandel = Par(*processes)
     mandel.start()
     logging.info('Image size: {0}x{1}'.format(*IMSIZE))
-    logging.info('{0} producer processes, {1} consumer processes'.format(len(processes)-1, 1))
+    logging.info(
+        '{0} producer processes, {1} consumer processes'.format(len(processes) - 1, 1))
     logging.info('All processes joined.')
     return
 
@@ -219,4 +222,4 @@ if __name__ == '__main__':
 
 #    main((320,240), 'mandelbrot.png', granularity=numprocs, level='info')
 #    main((480,320), 'mandelbrot.png', granularity=numprocs, level='info')
-    main((640,480), 'mandelbrot.png', granularity=numprocs, level='info')
+    main((640, 480), 'mandelbrot.png', granularity=numprocs, level='info')

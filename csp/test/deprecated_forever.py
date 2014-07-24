@@ -50,6 +50,7 @@ def fact(outchan):
         n += 1
         yield
 
+
 def fact():
     channel, skip = Channel(), Skip()
     skip //= fact(channel), Printer(channel)

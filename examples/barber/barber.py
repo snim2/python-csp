@@ -46,9 +46,10 @@ def barber(door, printer):
     while True:
         printer.write('Barber is sleeping.')
         customer = door.read()
-        print_c.write('The barber has woken to give {0} a shave.'.format(customer))
+        print_c.write(
+            'The barber has woken to give {0} a shave.'.format(customer))
         timer.sleep(random.random() * 5)
-    
+
 
 @process
 def main(max_chairs):

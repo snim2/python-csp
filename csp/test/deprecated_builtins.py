@@ -62,11 +62,11 @@ class TestBuiltinsWithProcesses(unittest.TestCase):
                                          *builtin_args)
             # Start producer, builtin and consumer in parallel.
             parallel_processes = self.csp_process.Par(
-              self.producer()(in_channel, in_data),
-              called_builtin,
-              self.consumer()(out_channel, reads=len(in_data)+excess_reads,
-                              result_channel=result_channel),
-              )
+                self.producer()(in_channel, in_data),
+                called_builtin,
+                self.consumer()(out_channel, reads=len(in_data) + excess_reads,
+                                result_channel=result_channel),
+            )
             parallel_processes.start()
         return _coordinator
 
@@ -109,7 +109,7 @@ class TestBuiltinsWithProcesses(unittest.TestCase):
         out_data = self.feedBuiltin(in_data, builtin)
         self.assertListsAlmostEqual(out_data, expected_out_data)
 
-    #XXX Something like this is already defined in Python 2.7.
+    # XXX Something like this is already defined in Python 2.7.
     def assertListsEqual(self, list1, list2, msg=None):
         """Similar to `assertListsAlmostEqual`, but compare exactly."""
         for item1, item2 in zip(list1, list2):
@@ -143,16 +143,16 @@ class TestBuiltinsWithProcesses(unittest.TestCase):
     def testCos(self):
         in_data = [0.0, 1.0, 4.0, -1.0, -4.0]
         expected_data = [1.0, 0.540302305868, -0.653643620864,
-                         0.540302305868, -0.653643620864, -0.839071529076,]
+                         0.540302305868, -0.653643620864, -0.839071529076, ]
         self.feedUnaryFloatOperation(in_data, expected_data, builtins.Cos)
 
     def testSucc(self):
         in_data = [0.0, 1.1, 99.123, 1e4, -1.0]
-        expected_data = [1.0, 2.1, 100.123, 1e4+1.0, 0.0]
+        expected_data = [1.0, 2.1, 100.123, 1e4 + 1.0, 0.0]
         self.feedUnaryFloatOperation(in_data, expected_data, builtins.Succ)
 
     def testPred(self):
-        in_data = [1.0, 2.1, 100.123, 1e4+1.0, 0.0]
+        in_data = [1.0, 2.1, 100.123, 1e4 + 1.0, 0.0]
         expected_data = [0.0, 1.1, 99.123, 1e4, -1.0]
         self.feedUnaryFloatOperation(in_data, expected_data, builtins.Pred)
 
@@ -174,6 +174,7 @@ class TestBuiltinsWithProcesses(unittest.TestCase):
 # FIXME: This shows up a synchronisation bug. Set the debug flag to
 # see the gory details: csp.os_thread.set_debug(True)
 #
-class TestBuiltinsWithThreads(TestBuiltinsWithProcesses):
-     csp_process = csp.os_thread
 
+
+class TestBuiltinsWithThreads(TestBuiltinsWithProcesses):
+    csp_process = csp.os_thread

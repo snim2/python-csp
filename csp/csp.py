@@ -28,23 +28,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from __future__ import absolute_import 
+from __future__ import absolute_import
 
 from contextlib import contextmanager
 
 import os
 import sys
 
-
-### Names exported by this module
+# Names exported by this module
 __all__ = ['set_debug', 'CSPProcess', 'CSPServer', 'Alt',
            'Par', 'Seq', 'Guard', 'Channel', 'FileChannel',
            'process', 'forever', 'Skip', 'CSP_IMPLEMENTATION']
 
-
 __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = 'July 2010'
-
 
 # FIXME: Simplify this logic. See the thread on "Importing different
 # implementations of the library" on the mailing list.
@@ -68,15 +65,15 @@ elif 'CSP' in os.environ:
 # If no useful information is available then try to import the
 # multiprocessing version of the code else catch the resulting
 # exception and use the threaded version.
-else: 
+else:
     try:
         from .os_process import *
     except:
         from .os_thread import *
 
 
-
 class CSP(object):
+
     """Context manager to execute Python functions sequentially or in
     parallel, similarly to OCCAM syntax:
 
@@ -86,7 +83,7 @@ class CSP(object):
         with csp.par:
             csp.process(myfunc2, arg1, arg2)
             csp.process(myfunc3, arg1, arg2)
-    csp.start()    
+    csp.start()
     # myfunc3 and myfunc4 will be executed in parallel.
     # myfunc1 and myfunc2 will be executed sequentially,
     # and myfunc3 and myfunc4 will be executed after
@@ -95,7 +92,7 @@ class CSP(object):
 
     def __init__(self):
         self.processes = []
-     
+
     @contextmanager
     def par(self):
         """Context manager to execute functions in parallel.

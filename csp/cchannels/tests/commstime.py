@@ -13,7 +13,7 @@ Bjorndalen, Brian Vinter, Otto Anshus.  CPA 2007, Surrey, UK, July
 Systems Engineering Series (ISSN 1383-7575).
 """
 
-from csp.csp import Par, process #, Channel
+from csp.csp import Par, process  # , Channel
 from csp.builtins import Prefix, Delta2, Succ
 
 import sys
@@ -39,11 +39,13 @@ def Consumer(cin):
     for i in range(N):
         cin.read()
     t2 = ts()
-    dt = t2-t1
+    dt = t2 - t1
     tchan = dt / (4 * N)
-    print("DT = {0}\nTime per ch : {1}/(4*{2}) = {3} s = {4} us".format(dt, dt, N, tchan, tchan * 1000000))
+    print("DT = {0}\nTime per ch : {1}/(4*{2}) = {3} s = {4} us".format(dt,
+                                                                        dt, N, tchan, tchan * 1000000))
     print("consumer done, poisoning channel")
     cin.poison()
+
 
 def CommsTimeBM():
     print('Creating channels now...')
@@ -63,6 +65,6 @@ def CommsTimeBM():
 if __name__ == '__main__':
     N_BM = 10
     for i in xrange(N_BM):
-        print("----------- run {0}/{1} -------------".format(i+1, N_BM))
+        print("----------- run {0}/{1} -------------".format(i + 1, N_BM))
         CommsTimeBM()
     print("------- Commstime finished ---------")

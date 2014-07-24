@@ -19,15 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-
 from __future__ import absolute_import
 
 from .csp import *
 
-
 __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = 'May 2010'
-
 
 __all__ = ['TokenRing']
 
@@ -39,7 +36,6 @@ class TokenRing(Par):
         self.procs = [func(index=i,
                            tokens=numtoks,
                            numnodes=size,
-                           inchan=self.chans[i-1],
+                           inchan=self.chans[i - 1],
                            outchan=self.chans[i]) for i in range(size)]
-        super(TokenRing, self).__init__(*self.procs) 
-
+        super(TokenRing, self).__init__(*self.procs)

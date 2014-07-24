@@ -19,6 +19,7 @@ from csp.builtins import Prefix, Delta2, Succ
 import os
 import time
 
+
 @process
 def Consumer(cin):
     """Commstime consumer process
@@ -34,11 +35,13 @@ def Consumer(cin):
     for i in range(N):
         cin.read()
     t2 = ts()
-    dt = t2-t1
+    dt = t2 - t1
     tchan = dt / (4 * N)
-    print("DT = {0}.\nTime per ch : {1}/(4*{2}) = {3} s = {4} us".format(dt, dt, N, tchan, tchan * 1000000))
+    print("DT = {0}.\nTime per ch : {1}/(4*{2}) = {3} s = {4} us".format(dt,
+                                                                         dt, N, tchan, tchan * 1000000))
     print("consumer done, posioning channel")
     cin.poison()
+
 
 def CommsTimeBM():
     print('Creating channels now...')
@@ -48,16 +51,16 @@ def CommsTimeBM():
     c = Channel()
     d = Channel()
     print("Running commstime test")
-    Par(Prefix(c, a, prefix_item = 0),  	# Initiator
-		Delta2(a, b, d),         	# Forwarding to two
-		Succ(b, c),                    	# Feeding back to prefix
-		Consumer(d)).start()      	# Timing process
+    Par(Prefix(c, a, prefix_item=0),  	# Initiator
+        Delta2(a, b, d),         	# Forwarding to two
+        Succ(b, c),                    	# Feeding back to prefix
+        Consumer(d)).start()      	# Timing process
     print('Finished run...')
-    
+
 
 if __name__ == '__main__':
     N_BM = 10
     for i in range(N_BM):
-        print("----------- run {0}/{1} -------------".format(i+1, N_BM))
+        print("----------- run {0}/{1} -------------".format(i + 1, N_BM))
         CommsTimeBM()
     print("------- Commstime finished ---------")

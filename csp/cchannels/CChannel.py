@@ -1,7 +1,8 @@
 import Channel as chnl
 import cPickle
 import uuid
-from csp.guards import Guard 
+from csp.guards import Guard
+
 
 class CChannel(Guard):
 
@@ -11,7 +12,7 @@ class CChannel(Guard):
         tak = uuid.uuid4().int & 0xffffff
         shm = uuid.uuid4().int & 0xffffff
 
-        self.channel = chnl.getChannel(p,av,tak,shm)
+        self.channel = chnl.getChannel(p, av, tak, shm)
         self.name = uuid.uuid1()
         return
 
@@ -20,13 +21,13 @@ class CChannel(Guard):
         self.channel = None
         return
 
-    def put(self,item):
+    def put(self, item):
         a = cPickle.dumps(item)
-        chnl.put(self.channel,a);
+        chnl.put(self.channel, a)
         return
 
     def get(self):
-        chnl.get(self.channel,ret)
+        chnl.get(self.channel, ret)
         item = cPickle.loads(ret)
         print(item)
         return item
@@ -38,11 +39,11 @@ class CChannel(Guard):
         if a == 1:
             return True
         else:
-            return False;
+            return False
 
-    def write(self,item):
+    def write(self, item):
         a = cPickle.dumps(item)
-        chnl._write(self.channel,a,len(a));
+        chnl._write(self.channel, a, len(a))
         return
 
     def read(self):
@@ -71,7 +72,7 @@ class CChannel(Guard):
         return item
 
     def poison(self):
-        chnl.poison(self.channel);
+        chnl.poison(self.channel)
         return
 
     def getStatus(self):

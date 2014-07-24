@@ -35,9 +35,9 @@ def test_alt1():
 def test_alt2():
     ch2, ch3, ch4 = Channel(), Channel(), Channel()
     Par(testAlt2(ch2, ch3, ch4),
-		sendAlt(ch2, 100),
-		sendAlt(ch3, 200),
-		sendAlt(ch4, 300)).start()
+        sendAlt(ch2, 100),
+        sendAlt(ch3, 200),
+        sendAlt(ch4, 300)).start()
     return
 
 
@@ -54,7 +54,7 @@ def test_alt3():
 def test_alt4():
     ch8, ch9, ch10 = Channel(), Channel(), Channel()
     Par(testAlt4(ch8, ch9, ch10),
-		sendAlt(ch8, 100),
-		sendAlt(ch9, 200),
-		sendAlt(ch10, 300)).start()
+        sendAlt(ch8, 100),
+        sendAlt(ch9, 200),
+        sendAlt(ch10, 300)).start()
     return

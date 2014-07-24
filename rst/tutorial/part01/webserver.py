@@ -56,7 +56,7 @@ def server(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((host, port))
-    sock.listen(5)    
+    sock.listen(5)
     while True:
         conn_sock, conn_addr = sock.accept()
         request = conn_sock.recv(4096).strip()
@@ -94,4 +94,3 @@ if __name__ == '__main__':
     host = ''
     port = 8888
     server(host, port).start()
-

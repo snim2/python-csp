@@ -19,12 +19,11 @@ You should have rceeived a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import absolute_import 
+from __future__ import absolute_import
 
 from .csp import *
 
 import math
-
 # TODO: Use numpy for more sophisticated processes.
 
 ACCEL_DUE_TO_GRAVITY = 9.80665
@@ -88,7 +87,8 @@ def Magnitude(inchan, outchan):
     while True:
         acceldata = inchan.read()
         mag = 0.0
-        for axis in acceldata: mag += axis ** 2
+        for axis in acceldata:
+            mag += axis ** 2
         outchan.write(math.sqrt(mag))
         yield
 
@@ -119,7 +119,7 @@ def Normalise(inchan, outchan, start=0.0, end=100.0):
     scale = end - start
     while True:
         outchan.write(inchan.read() / scale)
-        yield    
+        yield
 
 
 @forever
@@ -129,4 +129,3 @@ def Threshold(thresh, inchan, outchan):
         if mag >= thresh:
             outchan.write(mag)
         yield
-

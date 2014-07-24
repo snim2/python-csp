@@ -55,37 +55,44 @@ def Oscilloscope(inchan, scale=80.0, _process=None):
     blank[::, xaxis] = GREY
     # Draw vertical ticks
     vticks = [-100, -50, +50, +100]
-    for vtick in vticks: blank[::5, xaxis + vtick] = GREY # Horizontals
+    for vtick in vticks:
+        blank[::5, xaxis + vtick] = GREY  # Horizontals
     blank[::50, ::5] = GREY          # Verticals
     # Draw the 'blank' screen.
     pygame.surfarray.blit_array(screen, blank)      # Blit the screen buffer
     pygame.display.flip()                           # Flip the double buffer
     # ydata stores data for the trace.
-    ydata = [0.0 for i in range(WIDTH)] # assert len(ydata) <= WIDTH
+    ydata = [0.0 for i in range(WIDTH)]  # assert len(ydata) <= WIDTH
     QUIT = False
     while not QUIT:
         pixels = copy.copy(blank)
         ydata.append(inchan.read() * scale)
         ydata.pop(0)
         for x in range(WIDTH):
-            try: pixels[x][xaxis - int(ydata[x])] = TRACE
-            except: pass
-        pygame.surfarray.blit_array(screen, pixels)     # Blit the screen buffer
-        pygame.display.flip()                           # Flip the double buffer
-        #pygame.display.update(0, xaxis-100, WIDTH, 201) # Flip the double buffer
-        del pixels # Use constant space.
+            try:
+                pixels[x][xaxis - int(ydata[x])] = TRACE
+            except:
+                pass
+        # Blit the screen buffer
+        pygame.surfarray.blit_array(screen, pixels)
+        # Flip the double buffer
+        pygame.display.flip()
+        # pygame.display.update(0, xaxis-100, WIDTH, 201) # Flip the double
+        # buffer
+        del pixels  # Use constant space.
         for event in pygame.event.get():
             if event.type == pygame.QUIT \
-            or event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                    or event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                 QUIT = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
                 pygame.image.save(screen, filename)
-                print('Saving oscope image in: ' + str ( filename ) )
+                print('Saving oscope image in: ' + str(filename))
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 scale += 10.0
                 print('Oscilloscope scaling by %f' % scale)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if scale - 10.0 > 0.0: scale -= 10.0
+                if scale - 10.0 > 0.0:
+                    scale -= 10.0
                 print('Oscilloscope scaling by %f' % scale)
         yield
     inchan.poison()

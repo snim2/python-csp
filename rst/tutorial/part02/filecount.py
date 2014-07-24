@@ -46,7 +46,8 @@ def directory_count(path):
         sys.exit(1)
     # Get all filenames in directory
     paths = glob.glob(path + '/*')
-    files = [path for path in paths if not os.path.isdir(path) and os.path.isfile(path)]
+    files = [path for path in paths if not os.path.isdir(
+        path) and os.path.isfile(path)]
     procs = [word_count(fd) for fd in files]
     Par(*procs).start()
 
@@ -58,4 +59,3 @@ if __name__ == '__main__':
         sys.exit(1)
     else:
         directory_count(sys.argv[1]).start()
-    

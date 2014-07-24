@@ -32,7 +32,7 @@ __date__ = 'October 2009'
 def distance(first_point, second_point):
     (x1, y1) = first_point
     (x2, y2) = second_point
-    return math.sqrt((x1-x2)**2 + (y1-y2)**2)
+    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 
 def dot_add(first_point, second_point):
@@ -67,17 +67,22 @@ def simulate(infochan, SIZE):
             velocity = match_neighbour_velocities(near_vel)
         centre = dot_add(centre, velocity)
         # Wrap the screen.
-        if centre[0]<0: centre[0] += SIZE[0]
-        elif centre[0]>SIZE[0]: centre[0] -= SIZE[0]
-        if centre[1]<0: centre[1] += SIZE[1]
-        elif centre[1]>SIZE[1]: centre[1] -= SIZE[1]
+        if centre[0] < 0:
+            centre[0] += SIZE[0]
+        elif centre[0] > SIZE[0]:
+            centre[0] -= SIZE[0]
+        if centre[1] < 0:
+            centre[1] += SIZE[1]
+        elif centre[1] > SIZE[1]:
+            centre[1] -= SIZE[1]
     return
 
 
 def nearby(first_point, second_point):
     (pos1, vel1) = first_point
     (pos2, vel2) = second_point
-    if pos1 == pos2 and vel1 == vel2: return False
+    if pos1 == pos2 and vel1 == vel2:
+        return False
     return distance(pos1, pos2) <= 20
 
 
@@ -87,10 +92,12 @@ def FlockManager(channels, drawchan, NUMBOIDS):
     readchan = channels
     writechan = channels, drawchan
     """
-    info = [(0,0) for i in range(len(channels))]
-    relify = lambda x_y_vel: ([info[i][0][0]-x_y_vel[0][0], info[i][0][1]-x_y_vel[0][1]], x_y_vel[1])
+    info = [(0, 0) for i in range(len(channels))]
+    relify = lambda x_y_vel: (
+        [info[i][0][0] - x_y_vel[0][0], info[i][0][1] - x_y_vel[0][1]], x_y_vel[1])
     while True:
-        for i in range(NUMBOIDS): info[i] = channels[i].read()
+        for i in range(NUMBOIDS):
+            info[i] = channels[i].read()
         drawchan.write(info)
         for i in range(NUMBOIDS):
             near = [posvel for posvel in info if nearby(info[i], posvel)]
@@ -108,12 +115,12 @@ def drawboids(drawchan, SIZE):
     import pygame
 
     FGCOL = (137, 192, 210, 100)  # Foreground colour.
-    BGCOL = pygame.Color('black') # Background colour.
+    BGCOL = pygame.Color('black')  # Background colour.
     FPS = 60                      # Maximum frames per second.
     CAPTION = 'python-csp example: Boids'
     FILENAME = 'boids.png'        # Screenshot file.
     QUIT = False
-    
+
     clock = pygame.time.Clock()
     dirty, last = [], []
 
@@ -125,7 +132,8 @@ def drawboids(drawchan, SIZE):
         ms_elapsed = clock.tick(FPS)
 #        print ms_elapsed
         dirty = last
-        for rect in last: screen.fill(BGCOL, rect)
+        for rect in last:
+            screen.fill(BGCOL, rect)
         last = []
         positions, vels = list(zip(*drawchan.read()))
         for (x, y) in positions:
@@ -133,7 +141,7 @@ def drawboids(drawchan, SIZE):
             dirty.append(rect)
             last.append(rect)
         pygame.display.update(dirty)     # Update dirty rects.
-        for event in pygame.event.get(): # Process events.
+        for event in pygame.event.get():  # Process events.
             if event.type == pygame.QUIT:
                 QUIT = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
@@ -152,12 +160,12 @@ def main():
     infochans = [Channel() for i in range(NUMBOIDS)]
     # Draw channel for the drawboids process.
     drawchan = Channel()
-	# Flock manager.
+    # Flock manager.
     fm = FlockManager(infochans, drawchan, NUMBOIDS)
     # Generate a list of all processes in the simulation.
     procs = [simulate(infochans[i], SIZE) for i in range(NUMBOIDS)]
     procs.append(fm)
-    procs.append(drawboids(drawchan, SIZE)) # Drawing process.
+    procs.append(drawboids(drawchan, SIZE))  # Drawing process.
     simulation = Par(*procs)                # Start simulation.
     simulation.start()
     return

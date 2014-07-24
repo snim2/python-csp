@@ -29,15 +29,33 @@ __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = 'October 2009'
 
 
-def distance(first_point, second_point): (x1, y1) = first_point; (x2, y2) = second_point; return math.sqrt((x1-x2)**2 + (y1-y2)**2)
+def distance(first_point, second_point):
+    (x1, y1) = first_point
+    (x2, y2) = second_point
+    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
-def dot_add(first_point, second_point): (x1, y1) = first_point; (x2, y2) = second_point; return [x1 + x2, y1 + y2]
 
-def dot_minus(first_point, second_point): (x1, y1) = first_point; (x2, y2) = second_point; return [x1 - x2, y1 - y2]
+def dot_add(first_point, second_point):
+    (x1, y1) = first_point
+    (x2, y2) = second_point
+    return [x1 + x2, y1 + y2]
 
-def dot_prod(first_point, second_point): (x1, y1) = first_point; (x2, y2) = second_point; return [x1 * x2, y1 * y2]
 
-def scale(point, scalar): (x, y) = point; return [x * scalar, y * scalar]
+def dot_minus(first_point, second_point):
+    (x1, y1) = first_point
+    (x2, y2) = second_point
+    return [x1 - x2, y1 - y2]
+
+
+def dot_prod(first_point, second_point):
+    (x1, y1) = first_point
+    (x2, y2) = second_point
+    return [x1 * x2, y1 * y2]
+
+
+def scale(point, scalar):
+    (x, y) = point
+    return [x * scalar, y * scalar]
 
 
 def match_neighbour_velocities(near_vel):
@@ -45,22 +63,26 @@ def match_neighbour_velocities(near_vel):
     n = len(near_vel)
     return [reduce(operator.add, xs) / n, reduce(operator.add, ys) / n]
 
+
 def avoid_collision(near_pos):
     VCLOSE = 7        # Boids are very close if they are within VCLOSE pixels.
-    isclose = lambda x_y: math.sqrt(x_y[0]**2 + x_y[1]**2) < VCLOSE
+    isclose = lambda x_y: math.sqrt(x_y[0] ** 2 + x_y[1] ** 2) < VCLOSE
     vclose = list(filter(isclose, near_pos))
-    if len(vclose) == 0: return (0.0, 0.0)
+    if len(vclose) == 0:
+        return (0.0, 0.0)
     neg_vclose = [dot_prod((-1.0, -1.0), vector) for vector in vclose]
     close_x, close_y = list(zip(*neg_vclose))
     return (reduce(operator.add, close_x), reduce(operator.add, close_y))
+
 
 def stay_with_flock(near_pos, numnear):
     xs, ys = list(zip(*near_pos))
     return [reduce(operator.add, xs) / numnear,
             reduce(operator.add, ys) / numnear]
 
+
 def apply_speed_limit(velocity):
-    SPEED_LIMIT = 7.0 # Velocity limit (applies to both X and Y directions).
+    SPEED_LIMIT = 7.0  # Velocity limit (applies to both X and Y directions).
     if velocity[0] ** 2 + velocity[1] ** 2 > SPEED_LIMIT ** 2:
         slowdown = (SPEED_LIMIT ** 2 /
                     (velocity[0] ** 2 + velocity[1] ** 2))
@@ -76,7 +98,7 @@ def simulate(infochan, SIZE):
     """
     COHESION = 0.03   # Cohesion weight.
     AVOIDANCE = 0.25  # Separation weight.
-    ALIGNMENT = 0.120 # Alignment weight.
+    ALIGNMENT = 0.120  # Alignment weight.
     ACCEL = 0.8       # Ideal acceleration weight.
 
     centre = [random.randint(0, SIZE[0]), random.randint(0, SIZE[1])]
@@ -94,22 +116,28 @@ def simulate(infochan, SIZE):
             numnear = len(near_pos)
             accel = scale(match_neighbour_velocities(near_vel), ALIGNMENT)
             accel = dot_add(accel, scale(avoid_collision(near_pos), AVOIDANCE))
-            accel = dot_add(accel, scale(stay_with_flock(near_pos, numnear), COHESION))
+            accel = dot_add(
+                accel, scale(stay_with_flock(near_pos, numnear), COHESION))
             velocity = dot_add(velocity, scale(accel, ACCEL))
             velocity = apply_speed_limit(velocity)
         centre = dot_add(centre, velocity)
         # Wrap the screen.
-        if centre[0]<0: centre[0] += SIZE[0]
-        elif centre[0]>SIZE[0]: centre[0] -= SIZE[0]
-        if centre[1]<0: centre[1] += SIZE[1]
-        elif centre[1]>SIZE[1]: centre[1] -= SIZE[1]
+        if centre[0] < 0:
+            centre[0] += SIZE[0]
+        elif centre[0] > SIZE[0]:
+            centre[0] -= SIZE[0]
+        if centre[1] < 0:
+            centre[1] += SIZE[1]
+        elif centre[1] > SIZE[1]:
+            centre[1] -= SIZE[1]
     return
 
 
 def nearby(first_point, second_point):
     (pos1, vel1) = first_point
     (pos2, vel2) = second_point
-    if pos1 == pos2 and vel1 == vel2: return False
+    if pos1 == pos2 and vel1 == vel2:
+        return False
     return distance(pos1, pos2) <= 20
 
 
@@ -119,10 +147,12 @@ def FlockManager(channels, drawchan, NUMBOIDS):
     readset = channels
     writeset = drawchan, channels
     """
-    info = [(0,0) for i in range(len(channels))]
-    relify = lambda x_y_vel: ([info[i][0][0]-x_y_vel[0][0], info[i][0][1]-x_y_vel[0][1]], x_y_vel[1])
+    info = [(0, 0) for i in range(len(channels))]
+    relify = lambda x_y_vel: (
+        [info[i][0][0] - x_y_vel[0][0], info[i][0][1] - x_y_vel[0][1]], x_y_vel[1])
     while True:
-        for i in range(NUMBOIDS): info[i] = channels[i].read()
+        for i in range(NUMBOIDS):
+            info[i] = channels[i].read()
         drawchan.write(info)
         for i in range(NUMBOIDS):
             near = [posvel for posvel in info if nearby(info[i], posvel)]
@@ -140,12 +170,12 @@ def drawboids(drawchan, SIZE):
     import pygame
 
     FGCOL = (137, 192, 210, 100)  # Foreground colour.
-    BGCOL = pygame.Color('black') # Background colour.
+    BGCOL = pygame.Color('black')  # Background colour.
     FPS = 60                      # Maximum frames per second.
     CAPTION = 'python-csp example: Boids'
     FILENAME = 'boids.png'        # Screenshot file.
     QUIT = False
-    
+
     clock = pygame.time.Clock()
     dirty, last = [], []
 
@@ -157,7 +187,8 @@ def drawboids(drawchan, SIZE):
         ms_elapsed = clock.tick(FPS)
 #        print ms_elapsed
         dirty = last
-        for rect in last: screen.fill(BGCOL, rect)
+        for rect in last:
+            screen.fill(BGCOL, rect)
         last = []
         positions, vels = list(zip(*drawchan.read()))
         for (x, y) in positions:
@@ -165,7 +196,7 @@ def drawboids(drawchan, SIZE):
             dirty.append(rect)
             last.append(rect)
         pygame.display.update(dirty)     # Update dirty rects.
-        for event in pygame.event.get(): # Process events.
+        for event in pygame.event.get():  # Process events.
             if event.type == pygame.QUIT:
                 QUIT = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
@@ -184,12 +215,12 @@ def main():
     infochans = [Channel() for i in range(NUMBOIDS)]
     # Draw channel for the drawboids process.
     drawchan = Channel()
-	# Flock manager.
+    # Flock manager.
     fm = FlockManager(infochans, drawchan, NUMBOIDS)
     # Generate a list of all processes in the simulation.
     procs = [simulate(infochans[i], SIZE) for i in range(NUMBOIDS)]
     procs.append(fm)
-    procs.append(drawboids(drawchan, SIZE)) # Drawing process.
+    procs.append(drawboids(drawchan, SIZE))  # Drawing process.
     simulation = Par(*procs)                # Start simulation.
     simulation.start()
     return

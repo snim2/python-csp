@@ -19,7 +19,7 @@ You should have rceeived a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import absolute_import 
+from __future__ import absolute_import
 
 import os
 import multiprocessing
@@ -28,15 +28,15 @@ import time
 
 from .csp import *
 
-
 __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = 'May 2010'
 
-
-### Names exported by this module
+# Names exported by this module
 __all__ = ['Timer', 'Barrier']
 
+
 class Timer(Guard):
+
     """Guard which only commits to synchronisation when a timer has expired.
 
     Timer objects are a type of CSP guard, like Channel types and Skip
@@ -49,11 +49,11 @@ class Timer(Guard):
 
 >>> timer = Timer()
 >>> timer.sleep(5) # sleep for 5 seconds
->>> 
+>>>
 >>> alt = Alt(timer)
 >>> timer.set_alarm(3) # become selectable 3 seconds from now
 >>> alt.select() # will wait 3 seconds
->>> 
+>>>
     """
 
     def __init__(self):
@@ -65,7 +65,7 @@ class Timer(Guard):
     def set_alarm(self, timeout):
         self.now = time.time()
         self.alarm = self.now + timeout
-    
+
     def is_selectable(self):
         self.now = time.time()
         if self.alarm is None:
@@ -84,23 +84,23 @@ class Timer(Guard):
         """Put this process to sleep for a number of seconds.
         """
         time.sleep(timeout)
-    
+
     def enable(self):
         pass
-    
+
     def disable(self):
         pass
 
     def select(self):
         pass
 
-    
+
 class AbstractBarrier(object):
 
     def __init__(self, participants=0):
         self.participants = participants
         self.not_ready = participants
-        self.lock = None # MUST be overridden in subclass
+        self.lock = None  # MUST be overridden in subclass
         self.reset(participants)
 
     def reset(self, participants):
@@ -145,9 +145,9 @@ class AbstractBarrier(object):
                 self.not_ready = self.participants
                 self.lock.notifyAll()
 
-
 # TODO: Move these two classes to the modules corresponding to
 # their CSP process implementation (i. e. os_process/os_thread).
+
 
 class BarrierThreading(AbstractBarrier):
 
@@ -169,6 +169,6 @@ if CSP_IMPLEMENTATION == 'os_thread':
 else:
     Barrier = BarrierProcessing
 
-#Barrier.__doc__ = """
+# Barrier.__doc__ = """
 #
 #"""

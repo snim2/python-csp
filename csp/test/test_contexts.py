@@ -54,4 +54,3 @@ if __name__ == '__main__':
     testme1()
     print 'Test 2'
     testme2()
-    

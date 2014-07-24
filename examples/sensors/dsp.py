@@ -91,7 +91,8 @@ def Magnitude(inchan, outchan, _process=None):
     while True:
         acceldata = inchan.read()
         mag = 0.0
-        for axis in acceldata: mag += axis ** 2
+        for axis in acceldata:
+            mag += axis ** 2
         outchan.write(math.sqrt(mag))
         yield
     return
@@ -125,7 +126,7 @@ def Normalise(inchan, outchan, _process=None, start=0.0, end=100.0):
     scale = end - start
     while True:
         outchan.write(inchan.read() / scale)
-        yield    
+        yield
     return
 
 
@@ -137,5 +138,3 @@ def Threshold(thresh, inchan, outchan, _process=None):
             outchan.write(mag)
         yield
     return
-
-

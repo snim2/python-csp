@@ -50,40 +50,48 @@ def Oscilloscope(inchan, scale=1.0, _process=None):
     # Create a blank chart with vertical ticks, etc
     blank = numpy.zeros((WIDTH, HEIGHT, 3), dtype=numpy.int16)
     # Draw x-axis
-    xaxis = HEIGHT/2
+    xaxis = HEIGHT / 2
     blank[::, xaxis] = GREY
     # Draw vertical ticks
     vticks = [-100, -50, +50, +100]
-    for vtick in vticks: blank[::5, xaxis + vtick] = GREY # Horizontals
-    for vtick in vticks: blank[::50, ::5] = GREY          # Verticals
+    for vtick in vticks:
+        blank[::5, xaxis + vtick] = GREY  # Horizontals
+    for vtick in vticks:
+        blank[::50, ::5] = GREY          # Verticals
     # Draw the 'blank' screen.
     pygame.surfarray.blit_array(screen, blank)      # Blit the screen buffer
     pygame.display.flip()                           # Flip the double buffer
     # ydata stores data for the trace.
-    ydata = [0.0 for i in range(WIDTH)] # assert len(ydata) <= WIDTH
+    ydata = [0.0 for i in range(WIDTH)]  # assert len(ydata) <= WIDTH
     QUIT = False
     while not QUIT:
         pixels = copy.copy(blank)
         ydata.append(inchan.read() * scale)
         ydata.pop(0)
         for x in range(WIDTH):
-            try: pixels[x][xaxis - int(ydata[x])] = TRACE
-            except: pass
-        pygame.surfarray.blit_array(screen, pixels)     # Blit the screen buffer
-        pygame.display.flip()                           # Flip the double buffer
-        #pygame.display.update(0, xaxis-100, WIDTH, 201) # Flip the double buffer
-        del pixels # Use constant space.
+            try:
+                pixels[x][xaxis - int(ydata[x])] = TRACE
+            except:
+                pass
+        # Blit the screen buffer
+        pygame.surfarray.blit_array(screen, pixels)
+        # Flip the double buffer
+        pygame.display.flip()
+        # pygame.display.update(0, xaxis-100, WIDTH, 201) # Flip the double
+        # buffer
+        del pixels  # Use constant space.
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 QUIT = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
                 pygame.image.save(screen, filename)
-                print('Saving oscope image in:' + str ( filename ) )
+                print('Saving oscope image in:' + str(filename))
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 scale += 10.0
                 print('Oscilloscope scaling by {0}'.format(scale))
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if scale - 10.0 > 0.0: scale -= 10.0
+                if scale - 10.0 > 0.0:
+                    scale -= 10.0
                 print('Oscilloscope scaling by {0}'.format(scale))
         yield
     inchan.poison()
@@ -97,7 +105,7 @@ def MultipleOscilloscope(inchannels, _process=None):
     # Place and size the traces automatically:
     # >>> pygame.display.list_modes()
     # [(1024, 600), (800, 600), (720, 400), (640, 480), (640, 400), (640, 350)]
-    # >>> 
+    # >>>
     raise NotImplementedError('Not implemented just yet...')
 
 
@@ -128,7 +136,7 @@ def __test_sin():
     """
     channel = Channel()
     Par(dsp.Sin(channel), Oscilloscope(channel)).start()
-    return    
+    return
 
 
 def __test_cos():
@@ -136,7 +144,7 @@ def __test_cos():
     """
     channel = Channel()
     Par(dsp.Cos(channel), Oscilloscope(channel)).start()
-    return    
+    return
 
 
 def __test_mux():
@@ -152,7 +160,7 @@ def __test_mux():
               Mux2(channels[3], channels[4], channels[5]),
               Oscilloscope(channels[5]))
     par.start()
-    return    
+    return
 
 
 def __test_tan():
@@ -164,13 +172,12 @@ def __test_tan():
               dsp.Tan(channels[0], channels[1]),
               Oscilloscope(channels[1]))
     par.start()
-    return    
+    return
 
 
 if __name__ == '__main__':
-#    __test_tan()
+    #    __test_tan()
     __test_mux()
 #    __test_cos()
 #    __test_sin()
 #    __test_random()
-

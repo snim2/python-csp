@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import struct
 import hid
 import os
-import sys 
+import sys
 
 __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = 'November 2008'
@@ -75,26 +75,26 @@ class HIDSensor(object):
             hid.hid_set_debug_stream(self._error)
             hid.hid_set_usb_debug(0)
         # Initialisation
-        if not hid.hid_is_initialised(): # Doesn't seem to work
-            try: # Belt AND braces, Sir?
+        if not hid.hid_is_initialised():  # Doesn't seem to work
+            try:  # Belt AND braces, Sir?
                 hid.hid_init()
             except HIDError:
                 pass
         self._interface = hid.hid_new_HIDInterface()
         # Ensure we only use one HIDMatcher class per
         # type of sensor, with some reflection-fu.
-        #if not 'MATCHER' in self.__class__.__dict__:
+        # if not 'MATCHER' in self.__class__.__dict__:
         if not hasattr(self.__class__, 'MATCHER'):
             self.__class__.MATCHER = HIDMatcher(self.__class__.VID,
                                                 self.__class__.PID)
         return
-    
+
     def open(self):
         self._check(hid.hid_force_open(self._interface,
                                        0,
                                        self.__class__.MATCHER.matcher,
                                        3),
-                 'hid_force_open')
+                    'hid_force_open')
         self._id = self._interface.id
         with os.tmpfile() as tmpfile:
             hid.hid_write_identification(tmpfile, self._interface)
@@ -103,10 +103,11 @@ class HIDSensor(object):
             details = tmpfile.read() + '\n'
         return details
 
-    def __del__(self): # Destructor
-#    try:
-        ### WHY IS THIS BROKE?
-        if self._interface is None: return
+    def __del__(self):  # Destructor
+        #    try:
+        # WHY IS THIS BROKE?
+        if self._interface is None:
+            return
     #        elif hid.hid_is_opened(self._interface):
     #            hid.hid_delete_HIDInterface(self._interface)
     #        else:
@@ -128,31 +129,32 @@ class HIDSensor(object):
 
     @property
     def vendor(self):
-          return self.__class__.MATCHER._vendor
+        return self.__class__.MATCHER._vendor
 
     @property
     def product(self):
-          return self.__class__.MATCHER._product
+        return self.__class__.MATCHER._product
 
     @property
     def id(self):
-      return self._id
-  
+        return self._id
+
     def set_feature_report(self, path, buffer):
-            self._check(hid.hid_set_feature_report(self._interface, path, buffer),
-                        'set_feature_report')
-            
-            return
+        self._check(hid.hid_set_feature_report(self._interface, path, buffer),
+                    'set_feature_report')
+
+        return
 
     def get_feature_report(self, path, size):
-            reply = hid.hid_get_feature_report(self._interface, path, size)
-            #self._check(ret, 'get_feature_report')
-            return reply
+        reply = hid.hid_get_feature_report(self._interface, path, size)
+        #self._check(ret, 'get_feature_report')
+        return reply
 
 
 class HIDSensorCollection:
+
     """Interface to all attached sensors of known types."""
-    MAX_HID_DEVS = 20 # Limited by libhid
+    MAX_HID_DEVS = 20  # Limited by libhid
 
     def __init__(self, hidclasses):
         self._hidtypes = {}
@@ -167,7 +169,7 @@ class HIDSensorCollection:
 
     def __del__(self):
         return
-       
+
     def open(self):
         for hidclass in self._hidtypes:
             for i in range(HIDSensorCollection.MAX_HID_DEVS):
@@ -178,9 +180,9 @@ class HIDSensorCollection:
                         print('Found HID sensor: {0}'.format(hidif._id))
                         self._interfaces[hidif._id] = hidif
                 except HIDError as e:
-                    del hidif 
-                #except Error, e:
-                    #continue
+                    del hidif
+                # except Error, e:
+                    # continue
         return
 
     def get_all_data(self):
@@ -190,5 +192,5 @@ class HIDSensorCollection:
         print(len(self._interfaces), 'HID sensors attached')
         for hidif in self._interfaces:
             print('Interface: {0},'.format(str(hidif)), end=' ')
-            print(self._interfaces[hidif]._debug_str().format(self._interfaces[hidif].get_data()))
-
+            print(self._interfaces[hidif]._debug_str().format(
+                self._interfaces[hidif].get_data()))
