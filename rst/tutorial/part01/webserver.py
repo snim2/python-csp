@@ -32,14 +32,14 @@ def response(code, reason, page):
     <head><title>%i %s</title></head>
     <body>
     %s
-	<hr/>
-	<p><strong>Date:</strong> %s</p>
+    <hr/>
+    <p><strong>Date:</strong> %s</p>
     </body>
     </html>
     """ % (code, reason, page, time.ctime())
     template = """HTTP/1.0 %i %s
     Content-Type: text/html
-	Content-Length: %i
+    Content-Length: %i
 
 
     %s

@@ -37,7 +37,7 @@ def execute(processCount):
     def accumulator():
         """
         readset = channel
-        writeset = 
+        writeset =
         """
         pi = 4.0 * sum([channel.read() for channel in channels]) * delta
         elapseTime = time.time() - startTime

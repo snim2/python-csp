@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = '2010-05-16'
 
-#DEBUG = True
+# DEBUG = True
 DEBUG = False
 
 from functools import wraps  # Easy decorators
@@ -59,7 +59,8 @@ try:
         import multiprocessing.reduction
 except ImportError:
     raise ImportError('No library available for multiprocessing.\n' +
-                      'csp.os_process is only compatible with Python 2. 6 and above.')
+                      'csp.os_process is only compatible with Python 2. 6 ' +
+                      'and above.')
 
 CSP_IMPLEMENTATION = 'os_process'
 
@@ -714,7 +715,7 @@ n: 300
             typ, excn, tback = sys.exc_info()
             sys.excepthook(typ, excn, tback)
 
-### Guards and channels
+# Guards and channels
 
 
 class Guard(object):
@@ -872,7 +873,7 @@ Got: 100
             if not sval:
                 break
             data.append(sval)
-            #            _debug('Pipe got data: {0}, {1}'.format(len(sval), sval))
+            # _debug('Pipe got data: {0}, {1}'.format(len(sval), sval))
             if len(sval) < _BUFFSIZE:
                 break
         _debug('Left read loop')

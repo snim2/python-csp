@@ -1,7 +1,4 @@
-
 #!/usr/bin/env python
-
-# FIXME: Nowhere near PEP8 compatible :(
 
 from csp.csp import *
 

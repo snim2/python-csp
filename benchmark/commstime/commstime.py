@@ -16,7 +16,6 @@ Systems Engineering Series (ISSN 1383-7575).
 from csp.csp import *
 from csp.builtins import Prefix, Delta2, Succ
 
-import os
 import time
 
 

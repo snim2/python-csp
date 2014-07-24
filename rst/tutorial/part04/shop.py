@@ -52,4 +52,4 @@ doomed = Channel()
 doomed_children = Channel()
 Par(customer(doomed, doomed_children, 1), merchant(doomed), merchantswife(doomed_children), customer(
     doomed, doomed_children, 2), customer(doomed, doomed_children, 3), terminator(doomed)).start()
-#send5(doomed) // (recv(doomed), send52(doomed), interrupt(doomed))
+# send5(doomed) // (recv(doomed), send52(doomed), interrupt(doomed))

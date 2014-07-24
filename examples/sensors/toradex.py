@@ -15,7 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have rceeived a copy of the GNU General Public License
+You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
@@ -29,7 +29,7 @@ __date__ = 'November 2008'
 __version__ = '0.1'
 
 
-#DEBUG = True
+# DEBUG = True
 DEBUG = False
 
 
@@ -546,7 +546,7 @@ class Toradex8ChannelA2D(ToradexSensor):
             Toradex8ChannelA2D.MODE_SINGLE_ENDED
                 Toradex8ChannelA2D.MODE_PSEUDO_DIFFERENTIAL
         """
-        if not mode in (Toradex8ChannelA2D.MODE_SINGLE_ENDED,
+        if mode not in (Toradex8ChannelA2D.MODE_SINGLE_ENDED,
                         Toradex8ChannelA2D.MODE_PSEUDO_DIFFERENTIAL):
             raise HIDError('Toradex8ChannelA2D in undefined input mode!')
         raise NotImplementedError('Need report paths!')
@@ -615,7 +615,7 @@ def __test(sensorclass):
     print(sensor.open())
     while True:
         sensor.blink_led()
-        print(sensor._debug_str().format( & sensor.get_data()))
+        print(sensor._debug_str().format(sensor.get_data()))
 
 
 def __test_rh():

@@ -37,7 +37,7 @@ def execute(processCount):
     def accumulator():
         """
         readset = channel
-        writeset = 
+        writeset =
         """
         pi = 4.0 * sum([channel.read()
                         for i in range(0, processCount)]) * delta

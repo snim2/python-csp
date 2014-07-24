@@ -33,9 +33,9 @@ class CChannel(Guard):
         return item
 
     def is_selectable(self):
-        #print ( "is_selectable has been called" )
+        # print ( "is_selectable has been called" )
         a = chnl.is_selectable(self.channel)
-        #print ( "is_selectable got ", a )
+        # print ( "is_selectable got ", a )
         if a == 1:
             return True
         else:
@@ -55,9 +55,9 @@ class CChannel(Guard):
         return item
 
     def enable(self):
-        #print("ENABLED CALLED")
+        # print("ENABLED CALLED")
         chnl.enable(self.channel)
-        #print("returning from enable")
+        # print("returning from enable")
         return
 
     def disable(self):
@@ -65,7 +65,7 @@ class CChannel(Guard):
         return
 
     def select(self):
-        #print("calling _select")
+        # print("calling _select")
         ret = chnl._select(self.channel)
         item = cPickle.loads(ret)
         print(item)

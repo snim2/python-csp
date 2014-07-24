@@ -29,7 +29,7 @@ __date__ = 'November 2008'
 __version__ = '0.1'
 
 
-#DEBUG = True
+# DEBUG = True
 DEBUG = False
 
 
@@ -147,7 +147,7 @@ class HIDSensor(object):
 
     def get_feature_report(self, path, size):
         reply = hid.hid_get_feature_report(self._interface, path, size)
-        #self._check(ret, 'get_feature_report')
+        # self._check(ret, 'get_feature_report')
         return reply
 
 

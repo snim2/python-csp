@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 __author__ = 'Sarah Mount <s.mount@wlv.ac.uk>'
 __date__ = '2010-05-16'
 
-#DEBUG = True
+# DEBUG = True
 DEBUG = False
 
 from functools import wraps  # Easy decorators
@@ -726,7 +726,7 @@ n: 300
             typ, excn, tback = sys.exc_info()
             sys.excepthook(typ, excn, tback)
 
-### Guards and channels
+# Guards and channels
 
 
 class Guard(object):
@@ -962,7 +962,7 @@ Got: 100
         """
         self.checkpoison()
         _debug('channel select starting')
-        assert self._is_selectable == True
+        assert self._is_selectable
         with self._rlock:
             _debug('got read lock on channel {0} _available: {1}'.format(
                 self.name, str(self._available._Semaphore__value)))

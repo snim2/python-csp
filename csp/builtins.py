@@ -25,7 +25,6 @@ from __future__ import absolute_import
 
 import math
 import operator
-import os
 import sys
 
 from .guards import Timer

@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
 
-import os
 import multiprocessing
 import threading
 import time
@@ -168,7 +167,3 @@ if CSP_IMPLEMENTATION == 'os_thread':
     Barrier = BarrierThreading
 else:
     Barrier = BarrierProcessing
-
-# Barrier.__doc__ = """
-#
-#"""
