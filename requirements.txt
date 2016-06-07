@@ -3,7 +3,7 @@ argparse>=1.1
 check-manifest==0.31
 cov-core==1.15.0
 coverage==4.1
-decorator==4.0.9
+decorator==4.0.10
 py==1.4.31
 pytest==2.9.2
 pytest-cov==2.2.1
