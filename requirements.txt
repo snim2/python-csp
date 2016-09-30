@@ -7,6 +7,6 @@ decorator==4.0.10
 py==1.4.31
 pytest==3.0.3
 pytest-cov==2.3.1
-python-coveralls==2.7.0
+python-coveralls==2.8.0
 requests==2.11.1
 sh==1.11
