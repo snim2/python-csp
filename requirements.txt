@@ -4,7 +4,7 @@ check-manifest==0.34
 cov-core==1.15.0
 coverage==4.2
 decorator==4.0.10
-py==1.4.31
+py==1.4.32
 pytest==3.0.5
 pytest-cov==2.4.0
 python-coveralls==2.9.0
