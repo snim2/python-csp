@@ -2,7 +2,7 @@ PyYAML==3.12
 argparse>=1.1
 check-manifest==0.35
 cov-core==1.15.0
-coverage==4.4
+coverage==4.4.1
 decorator==4.0.11
 py==1.4.33
 pytest==3.0.7
