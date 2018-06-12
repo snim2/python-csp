@@ -8,5 +8,5 @@ py==1.5.3
 pytest==3.6.1
 pytest-cov==2.5.1
 python-coveralls==2.9.1
-requests==2.18.4
+requests==2.19.0
 sh==1.12.14
