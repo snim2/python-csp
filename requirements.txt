@@ -1,4 +1,4 @@
-PyYAML==5.1
+PyYAML==5.1.1
 argparse>=1.1
 check-manifest==0.39
 cov-core==1.15.0
